@@ -26,10 +26,11 @@ pub fn run() -> Result<(), JsValue> {
     let body = document.body().expect("document should have a body");
 
     // Manufacture the element we're gonna append
+    let app = document.get_element_by_id("app").unwrap();
     let val = document.create_element("p")?;
     val.set_text_content(Some("Hello from Rust!"));
 
-    body.append_child(&val)?;
+    app.append_child(&val)?;
 
     // Your code goes here!
     console::log_1(&JsValue::from_str("Hello world!"));
