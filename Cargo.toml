@@ -47,6 +47,9 @@ features = [
   'Node',
   'Window',
   'SvgElement',
+  'SvgRectElement',
+  'SvgLineElement',
+  'SvgCircleElement',
 ]
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
