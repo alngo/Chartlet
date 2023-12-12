@@ -1,4 +1,5 @@
 import("../pkg/index.js").then(module => {
-    let charlet = window.document.getElementById("chartlet");
-    module.run(chartlet.clientWidth, chartlet.clientHeight);
+    let root = document.getElementById("chartlet");
+    let chartlet = module.App.new(root);
+    chartlet.run();
 }).catch(console.error);
