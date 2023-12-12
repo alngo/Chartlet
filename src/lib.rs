@@ -4,6 +4,9 @@ use web_sys::*;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
+mod component;
+use component::Graphic;
+
 mod context;
 use context::canvas_context::CanvasContext;
 use context::svg_context::SvgContext;
@@ -27,11 +30,13 @@ impl App {
 
     pub fn run(&self) -> Result<(), JsValue> {
         self.init();
+        let candlestick = component::Candlestick::new(0, 0, 50, 50, "green".to_string());
         let svg_context = SvgContext::new(100, 100)?;
         // svg_context.draw_pixel((50, 50), "red")?;
         // svg_context.draw_line((0, 0), (100, 100), "red")?;
         // svg_context.draw_rect((0, 0), (100, 100), "red")?;
         svg_context.draw_circle((50, 50), 50, "red")?;
+        candlestick.render(&svg_context)?;
         self.root.append_child(&svg_context.svg)?;
 
         let canvas_context = CanvasContext::new(100, 100)?;
@@ -39,6 +44,7 @@ impl App {
         // canvas_context.draw_line((0, 0), (100, 100), "blue")?;
         // canvas_context.draw_rect((0, 0), (100, 100), "blue")?;
         canvas_context.draw_circle((50, 50), 50, "blue")?;
+        candlestick.render(&canvas_context)?;
         self.root.append_child(&canvas_context.canvas)?;
 
         console::log_1(&JsValue::from_str("App is running!"));
