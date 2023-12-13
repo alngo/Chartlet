@@ -57,6 +57,7 @@ impl Context for SvgContext {
         rect.set_attribute("y", &start.1.to_string())?;
         rect.set_attribute("width", &end.0.to_string())?;
         rect.set_attribute("height", &end.1.to_string())?;
+        rect.set_attribute("stroke", "black")?;
         rect.set_attribute("fill", color)?;
         self.svg.append_child(&rect)?;
         Ok(())
