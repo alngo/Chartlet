@@ -6,15 +6,15 @@ enum ChartKind {
 }
 
 #[derive(PartialEq, Debug)]
-struct Ohlc {
-    open: f32,
-    high: f32,
-    low: f32,
-    close: f32,
+pub struct Ohlc {
+    pub open: f32,
+    pub high: f32,
+    pub low: f32,
+    pub close: f32,
 }
 
 impl Ohlc {
-    fn new(open: f32, high: f32, low: f32, close: f32) -> Self {
+    pub fn new(open: f32, high: f32, low: f32, close: f32) -> Self {
         Ohlc {
             open,
             high,
@@ -24,13 +24,13 @@ impl Ohlc {
     }
 }
 
-struct Chart {
+pub struct Chart {
     kind: ChartKind,
-    data: Vec<Ohlc>,
+    pub data: Vec<Ohlc>,
 }
 
 impl Chart {
-    fn new() -> Self {
+    pub fn new() -> Self {
         Chart {
             kind: ChartKind::Candle,
             data: Vec::new(),
@@ -44,7 +44,7 @@ impl Chart {
         }
     }
 
-    fn add(&mut self, ohlc: Ohlc) {
+    pub fn add(&mut self, ohlc: Ohlc) {
         self.data.push(ohlc);
     }
 
@@ -52,7 +52,7 @@ impl Chart {
         self.data[index] = ohlc;
     }
 
-    fn get_data_at(&self, index: usize) -> Option<&Ohlc> {
+    pub fn get_data_at(&self, index: usize) -> Option<&Ohlc> {
         self.data.get(index)
     }
 
@@ -80,35 +80,47 @@ mod chart_tests {
     use super::*;
 
     #[test]
-    fn it_should_be_constructed_with_default_value() {
+    fn test_new() {
         let chart = Chart::new();
         assert_eq!(chart.kind, ChartKind::Candle);
         assert_eq!(chart.data.len(), 0);
     }
 
     #[test]
-    fn it_should_be_constructed_with_kind() {
+    fn test_new_with_kind() {
         let chart = Chart::new_with_kind(ChartKind::Line);
         assert_eq!(chart.kind, ChartKind::Line);
         assert_eq!(chart.data.len(), 0);
     }
 
     #[test]
-    fn it_should_add_an_ohlc() {
+    fn test_add() {
         let mut chart = Chart::new();
         chart.add(Ohlc::new(10.0, 20.0, 5.0, 15.0));
         assert_eq!(chart.data.len(), 1);
     }
 
     #[test]
-    fn it_should_set_kind() {
+    fn test_update() {
+        let mut chart = Chart::new();
+        chart.add(Ohlc::new(10.0, 20.0, 5.0, 15.0));
+        chart.add(Ohlc::new(15.0, 25.0, 10.0, 20.0));
+        chart.update(0, Ohlc::new(20.0, 30.0, 15.0, 25.0));
+        assert_eq!(
+            chart.get_data_at(0),
+            Some(&Ohlc::new(20.0, 30.0, 15.0, 25.0))
+        );
+    }
+
+    #[test]
+    fn test_set_kind() {
         let mut chart = Chart::new();
         chart.set_kind(ChartKind::Line);
         assert_eq!(chart.kind, ChartKind::Line);
     }
 
     #[test]
-    fn it_should_get_data_at_index() {
+    fn test_get_data_at() {
         let mut chart = Chart::new();
         chart.add(Ohlc::new(10.0, 20.0, 5.0, 15.0));
         chart.add(Ohlc::new(15.0, 25.0, 10.0, 20.0));
@@ -121,17 +133,5 @@ mod chart_tests {
             Some(&Ohlc::new(15.0, 25.0, 10.0, 20.0))
         );
         assert_eq!(chart.get_data_at(2), None);
-    }
-
-    #[test]
-    fn it_should_update_data_at_index() {
-        let mut chart = Chart::new();
-        chart.add(Ohlc::new(10.0, 20.0, 5.0, 15.0));
-        chart.add(Ohlc::new(15.0, 25.0, 10.0, 20.0));
-        chart.update(0, Ohlc::new(20.0, 30.0, 15.0, 25.0));
-        assert_eq!(
-            chart.get_data_at(0),
-            Some(&Ohlc::new(20.0, 30.0, 15.0, 25.0))
-        );
     }
 }

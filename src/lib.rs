@@ -4,8 +4,10 @@ use web_sys::*;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
+mod app;
 mod chart;
 mod component;
+mod configuration;
 
 mod context;
 use context::canvas_context::CanvasContext;
@@ -64,7 +66,7 @@ fn world_to_viewport(world: World, viewport: ViewPort, point: (u32, u32)) -> (u3
 }
 
 #[wasm_bindgen]
-pub struct App {
+pub struct OldApp {
     root: HtmlElement,
     world: World,
     viewPort: ViewPort,
@@ -73,8 +75,8 @@ pub struct App {
 type Candle = (u32, u32, u32, u32);
 
 #[wasm_bindgen]
-impl App {
-    pub fn new(root: HtmlElement) -> App {
+impl OldApp {
+    pub fn new(root: HtmlElement) -> OldApp {
         let world = World::new(
             0,
             root.client_width() as u32,
@@ -87,7 +89,7 @@ impl App {
             0,
             root.client_height() as u32,
         );
-        App {
+        OldApp {
             root,
             world,
             viewPort,
@@ -169,7 +171,7 @@ impl App {
         // canvas_context.draw_circle((50, 50), 50, "blue")?;
         // self.root.append_child(&canvas_context.canvas)?;
 
-        console::log_1(&JsValue::from_str("App is running!"));
+        console::log_1(&JsValue::from_str("OldApp is running!"));
 
         Ok(())
     }
