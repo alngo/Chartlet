@@ -4,6 +4,7 @@ use web_sys::*;
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
+mod chart;
 mod component;
 
 mod context;
