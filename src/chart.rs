@@ -1,4 +1,4 @@
-pub use context::Context;
+pub use crate::context::Context;
 
 #[derive(PartialEq, Debug)]
 pub enum ChartKind {
@@ -16,11 +16,12 @@ struct Ohlc {
 }
 
 // Offset is a tuple of (x, y) coordinates
-type Offset = (u32, f32);
+type Offset = (f32, f32);
+pub type Coordinate = (f32, f32);
 
 #[derive(PartialEq, Debug)]
 struct Window {
-    pub(crate) width: u32,
+    pub(crate) width: f32,
     pub(crate) height: f32,
     pub(crate) offset: Offset,
 }
@@ -39,7 +40,7 @@ impl Ohlc {
 pub struct Chart {
     kind: ChartKind,
     window: Window,
-    pub data: Vec<Ohlc>,
+    data: Vec<Ohlc>,
 }
 
 impl Chart {
@@ -48,9 +49,9 @@ impl Chart {
             kind: ChartKind::Candle,
             data: Vec::new(),
             window: Window {
-                width: 100,
+                width: 100.0,
                 height: 2.0,
-                offset: (0, 0.0),
+                offset: (0.0, 0.0),
             },
         }
     }
@@ -59,7 +60,7 @@ impl Chart {
         self.kind = kind;
     }
 
-    pub fn set_window(&mut self, width: u32, height: f32, offset: Offset) {
+    pub fn set_window(&mut self, width: f32, height: f32, offset: Offset) {
         self.window = Window {
             width,
             height,
@@ -81,33 +82,16 @@ impl Chart {
             .map(|ohlc| (ohlc.open, ohlc.high, ohlc.low, ohlc.close))
     }
 
-    fn window_to_viewport(&self, point: (f32, f32), viewport: (u32, u32)) -> (u32, u32) {
-        // Check calculation
-        let x = (point.0 * self.window.width as f32 / viewport.0 as f32) as u32;
-        let y = (point.1 * self.window.height / viewport.1 as f32) as u32;
+    fn window_to_viewport(&self, coordinate: Coordinate, viewport: (u32, u32)) -> (f32, f32) {
+        // calculate the scale factor
+        let x_scale = self.window.width / viewport.0 as f32;
+        let y_scale = self.window.height / viewport.1 as f32;
+        // calculate the new x and y coordinates
+        let x = (coordinate.0 - self.window.offset.0) / x_scale;
+        let y = (coordinate.1 - self.window.offset.1) / y_scale;
         (x, y)
     }
-
-    pub fn draw_grid(&self, width: u32, height: u32, context: &impl Context) {
-        let step: u32 = 10;
-
-        for x in (0..width).step_by(step as usize) {
-            context.draw_line(
-                (x as f32, 0.0),
-                (x as f32, height as f32),
-                "grey",
-            );
-        }
-        for y in (0..height).step_by(step as usize) {
-            context.draw_line(
-                (0.0, y as f32),
-                (width as f32, y as f32),
-                "grey",
-            );
-        }
-    }
 }
-
 
 #[cfg(test)]
 mod chart_tests {
@@ -118,9 +102,9 @@ mod chart_tests {
         let chart = Chart::new();
         assert_eq!(chart.kind, ChartKind::Candle);
         assert_eq!(chart.data.len(), 0);
-        assert_eq!(chart.window.width, 100);
+        assert_eq!(chart.window.width, 100.0);
         assert_eq!(chart.window.height, 2.0);
-        assert_eq!(chart.window.offset, (0, 0.0));
+        assert_eq!(chart.window.offset, (0.0, 0.0));
     }
 
     #[test]
@@ -133,10 +117,10 @@ mod chart_tests {
     #[test]
     fn test_set_window() {
         let mut chart = Chart::new();
-        chart.set_window(200, 4.0, (10, 10.0));
-        assert_eq!(chart.window.width, 200);
+        chart.set_window(200.0, 4.0, (10.0, 10.0));
+        assert_eq!(chart.window.width, 200.0);
         assert_eq!(chart.window.height, 4.0);
-        assert_eq!(chart.window.offset, (10, 10.0));
+        assert_eq!(chart.window.offset, (10.0, 10.0));
     }
 
     #[test]
@@ -160,5 +144,62 @@ mod chart_tests {
         chart.add_ohlc(15.0, 25.0, 10.0, 20.0);
         chart.update_ohlc(0, 20.0, 30.0, 15.0, 25.0);
         assert_eq!(chart.get_ohlc_at(0), Some((20.0, 30.0, 15.0, 25.0)));
+    }
+
+    #[test]
+    fn test_window_to_viewport_origin() {
+        let mut chart = Chart::new();
+        chart.set_window(100.0, 2.0, (0.0, 0.0));
+        let viewport = (100, 100);
+        let coordinate = (0.0, 0.0);
+        assert_eq!(chart.window_to_viewport(coordinate, viewport), (0.0, 0.0));
+    }
+
+    #[test]
+    fn test_window_to_viewport_origin_with_offset() {
+        let mut chart = Chart::new();
+        chart.set_window(100.0, 2.0, (1.0, 1.0));
+        let viewport = (100, 100);
+        let coordinate = (0.0, 0.0);
+        assert_eq!(
+            chart.window_to_viewport(coordinate, viewport),
+            (-1.0, -50.0)
+        );
+    }
+
+    #[test]
+    fn test_window_to_viewport_1_1() {
+        let mut chart = Chart::new();
+        chart.set_window(100.0, 2.0, (0.0, 0.0));
+        let viewport = (100, 100);
+        let coordinate = (1.0, 1.0);
+        assert_eq!(chart.window_to_viewport(coordinate, viewport), (1.0, 50.0));
+    }
+
+    #[test]
+    fn test_window_to_viewport_2_2() {
+        let mut chart = Chart::new();
+        chart.set_window(100.0, 2.0, (0.0, 0.0));
+        let viewport = (100, 100);
+        let coordinate = (2.0, 2.0);
+        assert_eq!(chart.window_to_viewport(coordinate, viewport), (2.0, 100.0));
+    }
+
+    #[test]
+    fn test_window_to_viewport_multiple() {
+        let mut chart = Chart::new();
+        chart.set_window(100.0, 2.0, (0.0, 0.0));
+        let viewport = (100, 100);
+        let coordinate = (1.0, 1.5);
+        assert_eq!(chart.window_to_viewport(coordinate, viewport), (1.0, 75.0));
+    }
+
+    #[test]
+    fn test_window_to_viewport_with_offset() {
+        let mut chart = Chart::new();
+        chart.set_window(100.0, 2.0, (1.0, 1.0));
+        let viewport = (100, 100);
+        let coordinate = (1.0, 2.0);
+        assert_eq!(chart.window_to_viewport(coordinate, viewport), (0.0, 50.0));
     }
 }
