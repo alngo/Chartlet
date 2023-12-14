@@ -138,11 +138,11 @@ impl Chart {
 
     fn get_candles(&self) -> &[Ohlc] {
         if self.data.len() < self.window.offset.0 as usize {
-            return &[]
+            return &[];
         }
         let end = self.window.offset.0 as usize + self.window.width as usize;
         if end > self.data.len() {
-            return &self.data[self.window.offset.0 as usize..]
+            return &self.data[self.window.offset.0 as usize..];
         }
         &self.data[self.window.offset.0 as usize..end]
     }
@@ -170,8 +170,18 @@ impl Chart {
                     let y = candle.open;
                     let width = 1.0;
                     let height = candle.close - candle.open;
-                    let rectangle = Rectangle { x, y, width, height };
-                    let line = Line { x1: x + 0.5, y1: candle.low, x2: x + 0.5, y2: candle.high };
+                    let rectangle = Rectangle {
+                        x,
+                        y,
+                        width,
+                        height,
+                    };
+                    let line = Line {
+                        x1: x + 0.5,
+                        y1: candle.low,
+                        x2: x + 0.5,
+                        y2: candle.high,
+                    };
 
                     graphics.push(Box::new(rectangle));
                     graphics.push(Box::new(line));
@@ -184,7 +194,6 @@ impl Chart {
             ChartKind::Bar => {
                 todo!()
             }
-
         }
     }
 }
@@ -295,6 +304,5 @@ mod chart_tests {
     }
 
     #[test]
-    fn test_get_candles() {
-    }
+    fn test_get_candles() {}
 }
