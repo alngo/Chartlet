@@ -2,7 +2,6 @@ pub struct Configuration {
     pub width: u32,
     pub height: u32,
     pub shift: u32,
-    pub scale: u32,
 }
 
 impl Configuration {
@@ -11,16 +10,11 @@ impl Configuration {
             width,
             height,
             shift: 0,
-            scale: 10,
         }
     }
 
     pub fn set_shift(&mut self, shift: u32) {
         self.shift = shift;
-    }
-
-    pub fn set_scale(&mut self, scale: u32) {
-        self.scale = scale;
     }
 
     pub fn set_width(&mut self, width: u32) {
@@ -42,7 +36,6 @@ mod configuration_tests {
         assert_eq!(config.width, 100);
         assert_eq!(config.height, 100);
         assert_eq!(config.shift, 0);
-        assert_eq!(config.scale, 10);
     }
 
     #[test]
@@ -50,13 +43,6 @@ mod configuration_tests {
         let mut config = Configuration::new(100, 100);
         config.set_shift(10);
         assert_eq!(config.shift, 10);
-    }
-
-    #[test]
-    fn test_set_scale() {
-        let mut config = Configuration::new(100, 100);
-        config.set_scale(10);
-        assert_eq!(config.scale, 10);
     }
 
     #[test]
