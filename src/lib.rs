@@ -15,25 +15,7 @@ use context::svg_context::SvgContext;
 use context::Context;
 
 #[derive(Copy, Clone, Debug)]
-struct World {
-    pub x_min: u32,
-    pub x_max: u32,
-    pub y_min: u32,
-    pub y_max: u32,
-}
 
-impl World {
-    fn new(x_min: u32, x_max: u32, y_min: u32, y_max: u32) -> World {
-        World {
-            x_min,
-            x_max,
-            y_min,
-            y_max,
-        }
-    }
-}
-
-#[derive(Copy, Clone, Debug)]
 struct ViewPort {
     pub x_min: u32,
     pub x_max: u32,

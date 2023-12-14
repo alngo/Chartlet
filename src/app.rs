@@ -4,10 +4,20 @@ use web_sys::*;
 use crate::chart::{Chart, Ohlc};
 use crate::configuration::Configuration;
 
+// Offset is a tuple of (x, y) coordinates
+type Offset = (u32, f32);
+
+struct Window {
+    width: u32,
+    height: f32,
+    Offset: Offset,
+}
+
 #[wasm_bindgen]
 pub struct App {
     configuration: Configuration,
     chart: Chart,
+    window: Window,
 }
 
 #[wasm_bindgen]
@@ -16,15 +26,16 @@ impl App {
         App {
             configuration: Configuration::new(width, height),
             chart: Chart::new(),
+            window: Window {
+                width,
+                height: height as f32,
+                Offset: (0, 0.0),
+            },
         }
     }
 
     pub fn set_shift(&mut self, shift: u32) {
         self.configuration.set_shift(shift);
-    }
-
-    pub fn set_scale(&mut self, scale: u32) {
-        self.configuration.set_scale(scale);
     }
 
     pub fn set_width(&mut self, width: u32) {
@@ -57,13 +68,6 @@ mod app_tests {
         let mut app = App::new(100, 100);
         app.set_shift(10);
         assert_eq!(app.configuration.shift, 10);
-    }
-
-    #[test]
-    fn test_app_set_scale() {
-        let mut app = App::new(100, 100);
-        app.set_scale(10);
-        assert_eq!(app.configuration.scale, 10);
     }
 
     #[test]

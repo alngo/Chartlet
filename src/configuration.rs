@@ -2,7 +2,6 @@ pub struct Configuration {
     pub width: u32,
     pub height: u32,
     pub shift: u32,
-    pub scale: u32,
 }
 
 impl Configuration {
@@ -11,16 +10,11 @@ impl Configuration {
             width,
             height,
             shift: 0,
-            scale: 10,
         }
     }
 
     pub fn set_shift(&mut self, shift: u32) {
         self.shift = shift;
-    }
-
-    pub fn set_scale(&mut self, scale: u32) {
-        self.scale = scale;
     }
 
     pub fn set_width(&mut self, width: u32) {
