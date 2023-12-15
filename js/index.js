@@ -1,12 +1,14 @@
 import("../pkg/index.js").then(module => {
     let root = document.getElementById("chartlet");
-    // let width = root.clientWidth;
-    // let height = root.clientHeight;
-    let app = module.App.new(width, height);
-    // Add 10 random open high low close bars
-    //app.add_ohlc()
+    let chart = module.Chart.new(module.Timeframe.M5, 0);
 
-    // app.set_shift(10);
-    // let chartlet = module.OldApp.new(root);
-    // chartlet.run();
+    chart.add_data(1.1000, 1.1030, 1.0990, 1.1010, 100);
+    chart.add_data(1.1010, 1.1030, 1.1000, 1.1020, 100);
+    chart.add_data(1.1020, 1.1030, 1.1010, 1.1020, 100);
+    chart.add_data(1.1020, 1.1050, 1.1010, 1.1050, 100);
+    chart.add_data(1.1050, 1.1055, 1.1030, 1.1040, 100);
+
+    chart.auto_frame(0, 10)
+
+
 }).catch(console.error);

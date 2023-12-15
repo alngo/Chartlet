@@ -50,3 +50,34 @@ ymin                     ymax
 xmin                     xmax
             Window
 ```
+
+## Reponsability - Draft
+
+App spawn 
+- a chart.
+  - chart is the "world"
+  - chart provides information as wanted
+
+App spwan
+- a layer
+  - layer have a context (where to draw)
+
+App spawn
+- a window.
+  - window can convert coordinate to viewport
+
+App ask graphics from chart given a window (clipping issue?)
+- Line
+- Bar
+- Candle
+
+App ask layer to draw graphics
+Chart is the world and data holder
+It should have the begining timestamp + the timeframe
+It should provide information only
+much like a db
+Maybe it is not the good naming
+DataStore?
+History?
+
+Other part should build Graphics based on information
