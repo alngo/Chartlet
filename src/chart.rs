@@ -1,8 +1,8 @@
+use crate::history::{History, Timeframe};
 use wasm_bindgen::prelude::*;
 use web_sys::*;
-use crate::history::{History, Timeframe};
 
-type Point = (f32, f32);
+type Point = (u32, f32);
 
 #[wasm_bindgen]
 #[derive(Clone, Debug)]
@@ -37,13 +37,18 @@ impl Chart {
             frame: Frame {
                 width: 0,
                 height: 0.0,
-                offset: (0.0, 0.0),
+                offset: (0, 0.0),
             },
         }
     }
 
     pub fn add_data(&mut self, open: f32, high: f32, low: f32, close: f32, volume: f32) {
         self.history.insert(open, high, low, close, volume);
+    }
+
+    pub fn set_frame(&mut self, width: u32, height: f32, offset_x: u32, offset_y: f32) {
+        let offset = (offset_x, offset_y);
+        self.frame = Frame::new(width, height, offset);
     }
 
     pub fn auto_frame(&mut self, from: u32, to: u32) {
@@ -60,7 +65,7 @@ impl Chart {
         }
         let height = max - min;
         let width = to - from;
-        self.frame = Frame::new(width, height, (from as f32, min));
+        self.frame = Frame::new(width, height, (from, min));
     }
 }
 
@@ -71,14 +76,14 @@ mod chart_tests {
     #[test]
     fn test_new() {
         let chart = Chart::new(Timeframe::M5, 0);
-        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [], timeframe: M5, start_date: 0 }, frame: Frame { width: 0, height: 0.0, offset: (0.0, 0.0) } }");
+        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [], timeframe: M5, start_date: 0 }, frame: Frame { width: 0, height: 0.0, offset: (0, 0.0) } }");
     }
 
     #[test]
     fn test_add_data() {
         let mut chart = Chart::new(Timeframe::M5, 0);
         chart.add_data(1.0, 2.0, 3.0, 4.0, 5.0);
-        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [(1.0, 2.0, 3.0, 4.0, 5.0)], timeframe: M5, start_date: 0 }, frame: Frame { width: 0, height: 0.0, offset: (0.0, 0.0) } }");
+        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [(1.0, 2.0, 3.0, 4.0, 5.0)], timeframe: M5, start_date: 0 }, frame: Frame { width: 0, height: 0.0, offset: (0, 0.0) } }");
     }
 
     #[test]
@@ -91,7 +96,13 @@ mod chart_tests {
         chart.add_data(5.0, 6.0, 7.0, 8.0, 9.0);
         chart.add_data(6.0, 7.0, 8.0, 9.0, 10.0);
         chart.auto_frame(0, 6);
-        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [(1.0, 2.0, 3.0, 4.0, 5.0), (2.0, 3.0, 4.0, 5.0, 6.0), (3.0, 4.0, 5.0, 6.0, 7.0), (4.0, 5.0, 6.0, 7.0, 8.0), (5.0, 6.0, 7.0, 8.0, 9.0), (6.0, 7.0, 8.0, 9.0, 10.0)], timeframe: M5, start_date: 0 }, frame: Frame { width: 6, height: 4.0, offset: (0.0, 3.0) } }");
+        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [(1.0, 2.0, 3.0, 4.0, 5.0), (2.0, 3.0, 4.0, 5.0, 6.0), (3.0, 4.0, 5.0, 6.0, 7.0), (4.0, 5.0, 6.0, 7.0, 8.0), (5.0, 6.0, 7.0, 8.0, 9.0), (6.0, 7.0, 8.0, 9.0, 10.0)], timeframe: M5, start_date: 0 }, frame: Frame { width: 6, height: 4.0, offset: (0, 3.0) } }");
+    }
+
+    #[test]
+    fn test_set_frame() {
+        let mut chart = Chart::new(Timeframe::M5, 0);
+        chart.set_frame(6, 4.0, 0, 3.0);
+        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [], timeframe: M5, start_date: 0 }, frame: Frame { width: 6, height: 4.0, offset: (0, 3.0) } }");
     }
 }
-
