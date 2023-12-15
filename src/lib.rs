@@ -8,6 +8,7 @@ mod app;
 mod chart;
 mod component;
 mod configuration;
+mod history;
 
 mod context;
 use context::canvas_context::CanvasContext;
