@@ -1,5 +1,8 @@
+use wasm_bindgen::prelude::*;
 use std::cmp;
 
+#[wasm_bindgen]
+#[derive(Copy, Clone, Debug)]
 pub enum Timeframe {
     M5,
     M10,
@@ -11,7 +14,9 @@ pub enum Timeframe {
 // (open, high, low, close, volume)
 type Data = (f32, f32, f32, f32, f32);
 
-struct History {
+#[wasm_bindgen]
+#[derive(Clone, Debug)]
+pub struct History {
     data: Vec<Data>,
     timeframe: Timeframe,
     start_date: u32,
