@@ -1,15 +1,15 @@
 use crate::history::{History, Timeframe};
+use crate::renderer::Renderer;
 use wasm_bindgen::prelude::*;
-use web_sys::*;
 
 type Point = (u32, f32);
 
 #[wasm_bindgen]
 #[derive(Clone, Debug)]
-struct Frame {
+pub struct Frame {
     width: u32,
     height: f32,
-    offset: Point,
+    offset: (u32, f32),
 }
 
 impl Frame {
@@ -19,6 +19,14 @@ impl Frame {
             height: height,
             offset: offset,
         }
+    }
+
+    pub fn to_viewport(&self, point: Point, viewport: (u32, u32)) -> (f32, f32) {
+        let x_scale = self.width as f32 / viewport.0 as f32;
+        let y_scale = self.height / viewport.1 as f32;
+        let x = (point.0 as f32 - self.offset.0 as f32) as f32 / x_scale;
+        let y = (point.1 - self.offset.1) / y_scale;
+        (x, y)
     }
 }
 
@@ -66,6 +74,68 @@ impl Chart {
         let height = max - min;
         let width = to - from;
         self.frame = Frame::new(width, height, (from, min));
+    }
+
+    pub fn render_with(&self, renderer: Renderer) {
+        renderer.render_grid(
+            &self.frame,
+            self.history
+                .get_timeline(self.frame.offset.0, self.frame.offset.0 + self.frame.width),
+        );
+        renderer.render_chart(
+            &self.frame,
+            self.history
+                .get_data(self.frame.offset.0, self.frame.offset.0 + self.frame.width),
+        );
+        renderer.render_indicators();
+        renderer.render_objects();
+    }
+}
+
+#[cfg(test)]
+mod frame_tests {
+    use super::*;
+
+    #[test]
+    fn test_frame_to_viewport_origin() {
+        let frame = Frame::new(100, 2.0, (0, 0.0));
+        let viewport = (100, 100);
+        let coordinate = (0, 0.0);
+        assert_eq!(frame.to_viewport(coordinate, viewport), (0.0, 0.0));
+    }
+
+    #[test]
+    fn test_frame_to_viewport_origin_with_offset() {
+        let frame = Frame::new(100, 2.0, (1, 1.0));
+        let viewport = (100, 100);
+        let coordinate = (0, 0.0);
+        assert_eq!(frame.to_viewport(coordinate, viewport), (-1.0, -50.0));
+    }
+
+    #[test]
+    fn test_frame_to_viewport_coordinates() {
+        let frame = Frame::new(100, 2.0, (0, 0.0));
+        let viewport = (100, 100);
+        let coordinate = (1, 1.0);
+        assert_eq!(frame.to_viewport(coordinate, viewport), (1.0, 50.0));
+        let coordinate = (1, 1.5);
+        assert_eq!(frame.to_viewport(coordinate, viewport), (1.0, 75.0));
+        let coordinate = (2, 2.0);
+        assert_eq!(frame.to_viewport(coordinate, viewport), (2.0, 100.0));
+    }
+
+    #[test]
+    fn test_frame_to_viewport_coordinates_with_offset() {
+        let frame = Frame::new(100, 2.0, (1, 1.0));
+        let viewport = (100, 100);
+        let coordinate = (0, 0.0);
+        assert_eq!(frame.to_viewport(coordinate, viewport), (-1.0, -50.0));
+        let coordinate = (1, 1.0);
+        assert_eq!(frame.to_viewport(coordinate, viewport), (0.0, 0.0));
+        let coordinate = (1, 1.5);
+        assert_eq!(frame.to_viewport(coordinate, viewport), (0.0, 25.0));
+        let coordinate = (1, 2.0);
+        assert_eq!(frame.to_viewport(coordinate, viewport), (0.0, 50.0));
     }
 }
 

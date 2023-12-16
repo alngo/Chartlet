@@ -10,6 +10,7 @@ mod context;
 
 mod chart;
 mod history;
+mod renderer;
 
 fn set_panic_hook() {
     // This provides better error messages in debug mode.
