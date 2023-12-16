@@ -5,8 +5,7 @@ use web_sys::*;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 // Should have a better name
-mod component;
-mod context;
+mod graphic;
 
 mod chart;
 mod history;

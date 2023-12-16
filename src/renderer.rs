@@ -1,19 +1,16 @@
 use crate::chart::Frame;
-use crate::context::Context;
 use wasm_bindgen::prelude::*;
 use web_sys::*;
 
+enum RenderingContext {}
+
 #[wasm_bindgen]
 #[derive(Clone, Debug)]
-pub struct Renderer {
-    context: Box<dyn Context>
-}
+pub struct Renderer {}
 
 impl Renderer {
     pub fn default() -> Renderer {
-        Renderer {
-            context: SvgRenderingContext::new().unwrap(),
-        }
+        Renderer {}
     }
 
     pub fn render_grid(&self, frame: &Frame, timeline: Vec<u32>) {
