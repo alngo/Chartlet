@@ -5,11 +5,11 @@ use web_sys::*;
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 // Should have a better name
-mod graphic;
+pub mod chart;
+pub mod graphic;
+pub mod history;
 
-mod chart;
-mod history;
-mod renderer;
+pub use graphic::Renderer;
 
 fn set_panic_hook() {
     // This provides better error messages in debug mode.

@@ -1,9 +1,9 @@
 use super::{Context, Coordinate};
 use wasm_bindgen::prelude::{JsCast, JsValue};
-use web_sys::{SvgCircleElement, SvgElement, SvgLineElement, SvgRectElement};
+use web_sys::{SvgCircleElement, SvgElement, SvgLineElement, SvgRectElement, SvgTextElement};
 
 pub struct SvgRenderingContext {
-    svg: SvgElement,
+    pub svg: SvgElement,
 }
 
 impl SvgRenderingContext {
@@ -77,6 +77,18 @@ impl Context for SvgRenderingContext {
     }
 
     fn draw_text(&self, position: Coordinate, text: &str, color: &str) -> Result<(), JsValue> {
-        todo!();
+        let document = web_sys::window().unwrap().document().unwrap();
+        let text_element = document
+            .create_element_ns(Some("http://www.w3.org/2000/svg"), "text")?
+            .dyn_into::<SvgTextElement>()?;
+        text_element.set_attribute("x", &position.0.to_string())?;
+        text_element.set_attribute("y", &position.1.to_string())?;
+        text_element.set_attribute("fill", color)?;
+        text_element.set_attribute("font-size", "12")?;
+        text_element.set_attribute("font-family", "monospace")?;
+        text_element.set_attribute("text-anchor", "middle")?;
+        text_element.set_inner_html(text);
+        self.svg.append_child(&text_element)?;
+        Ok(())
     }
 }

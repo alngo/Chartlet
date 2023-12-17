@@ -1,5 +1,7 @@
 mod svg;
 
+pub use svg::SvgRenderingContext;
+
 use wasm_bindgen::prelude::JsValue;
 
 pub type Coordinate = (f32, f32);
