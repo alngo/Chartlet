@@ -45,8 +45,13 @@ impl Renderer {
             let (x, y) = frame.to_viewport((i as u32, 0.0), (self.width, self.height));
             context.draw_line((x, 0.0), (x, self.height as f32), "black")?;
         }
-        self.layers.insert("timeline".to_string(), context.svg);
+        self.layers
+            .insert("timeline".to_string(), context.svg.clone());
         Ok(())
+    }
+
+    pub fn get_timeline(&self) -> SvgElement {
+        self.layers.get("timeline").unwrap().clone()
     }
 
     // pub fn render_chart(&self, frame: &Frame, data: &[(f32, f32, f32, f32, f32)]) {
@@ -58,13 +63,13 @@ impl Renderer {
     //     todo!()
     // }
 
-    pub fn render_indicators(&self) {
-        todo!()
-    }
+    // pub fn render_indicators(&self) {
+    //     todo!()
+    // }
 
-    pub fn render_objects(&self) {
-        todo!()
-    }
+    // pub fn render_objects(&self) {
+    //     todo!()
+    // }
 }
 
 #[cfg(test)]

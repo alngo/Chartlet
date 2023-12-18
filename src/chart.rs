@@ -100,7 +100,7 @@ impl Chart {
         //         .get_data(self.frame.offset.0, self.frame.offset.0 + self.frame.width),
         // );
         // renderer.render_indicators();
-        renderer.render_objects();
+        // renderer.render_objects();
     }
 }
 
