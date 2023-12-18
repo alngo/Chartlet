@@ -2,9 +2,8 @@ import("../pkg/index.js").then(module => {
     let root = document.getElementById("chartlet");
     console.log(module);
 
-    let renderer = module.Renderer.new(1, 2);
+    let renderer = module.Renderer.new(root, root.clientWidth, root.clientHeight);
     let chart = module.Chart.new(module.Timeframe.M5, 0);
-
     chart.add_data(1.1000, 1.1030, 1.0990, 1.1010, 100);
     chart.add_data(1.1010, 1.1030, 1.1000, 1.1020, 100);
     chart.add_data(1.1020, 1.1030, 1.1010, 1.1020, 100);
@@ -13,7 +12,6 @@ import("../pkg/index.js").then(module => {
     chart.auto_frame(0, 10)
 
     chart.render_with(renderer);
-
-    renderer.get_timeline();
+    console.log(renderer);
 
 }).catch(console.error);
