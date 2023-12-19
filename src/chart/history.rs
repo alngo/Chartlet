@@ -59,6 +59,16 @@ impl History {
         }
         timeline
     }
+
+    pub fn get_quotation(&self, from: u32, to: u32) -> Vec<f32> {
+        let data = self.get_data(from, to);
+        let mut quotation = Vec::new();
+        for (_, _, low, high, _) in data {
+            quotation.push(*low);
+            quotation.push(*high);
+        }
+        quotation
+    }
 }
 
 #[cfg(test)]

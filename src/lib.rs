@@ -6,10 +6,14 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 // Should have a better name
 pub mod chart;
-pub mod graphic;
-pub mod history;
+// pub mod graphic;
 
-pub use graphic::Renderer;
+// pub use graphic::Renderer;
+
+#[wasm_bindgen]
+pub fn init() {
+    set_panic_hook();
+}
 
 fn set_panic_hook() {
     // This provides better error messages in debug mode.

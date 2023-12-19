@@ -71,6 +71,10 @@ App ask graphics from chart given a window (clipping issue?)
 - Bar
 - Candle
 
+Chart hold 
+objects
+Indicators
+
 App ask layer to draw graphics
 Chart is the world and data holder
 It should have the begining timestamp + the timeframe
