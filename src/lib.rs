@@ -6,8 +6,7 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 pub mod builder;
 pub mod chart;
-// pub mod graphic;
-// pub use graphic::Renderer;
+pub mod graphic;
 
 #[wasm_bindgen]
 pub fn init() {

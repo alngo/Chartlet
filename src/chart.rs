@@ -58,7 +58,11 @@ impl Chart {
     }
 
     pub fn build_with(&self, builder: &Builder) {
-        builder.build_timeline();
+        let timeline = self.history.get_timeline(
+            self.frame.offset.x as u32,
+            self.frame.offset.x as u32 + self.frame.width,
+        );
+        builder.build_timeline(timeline);
     }
 }
 
