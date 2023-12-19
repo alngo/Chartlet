@@ -60,27 +60,6 @@ impl Chart {
     pub fn build_with(&self, builder: &Builder) {
         builder.build_timeline();
     }
-
-    // pub fn render_with(&self, mut renderer: Renderer) {
-    // let _ = renderer.render_timeline(
-    //     &self.frame,
-    //     self.history
-    //         .get_timeline(self.frame.offset.0, self.frame.offset.0 + self.frame.width),
-    // );
-
-    // let _ = renderer.render_quotation(
-    //     &self.frame,
-    //     self.history
-    //     .get_quotation(self.frame.offset.0, self.frame.offset.0 + self.frame.width),
-    //     );
-    // renderer.render_chart(
-    //     &self.frame,
-    //     self.history
-    //         .get_data(self.frame.offset.0, self.frame.offset.0 + self.frame.width),
-    // );
-    // renderer.render_indicators();
-    // renderer.render_objects();
-    // }
 }
 
 #[cfg(test)]
