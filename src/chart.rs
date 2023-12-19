@@ -1,6 +1,8 @@
 use wasm_bindgen::prelude::*;
 
 // use crate::graphic::Renderer;
+use crate::builder::Builder;
+
 pub mod frame;
 pub mod history;
 pub mod point;
@@ -19,11 +21,6 @@ pub struct Chart {
 #[wasm_bindgen]
 impl Chart {
     pub fn new(timeframe: Timeframe, start_date: u32) -> Chart {
-        // This provides better error messages in debug mode.
-        // It's disabled in release mode so it doesn't bloat up the file size.
-        #[cfg(debug_assertions)]
-        console_error_panic_hook::set_once();
-
         Chart {
             history: History::new(timeframe, start_date),
             frame: Frame {
@@ -58,6 +55,10 @@ impl Chart {
         let height = max - min;
         let width = to - from;
         self.frame = Frame::new(width, height, Point::new(from as f32, min));
+    }
+
+    pub fn build_with(&self, builder: &Builder) {
+        builder.build_timeline();
     }
 
     // pub fn render_with(&self, mut renderer: Renderer) {
