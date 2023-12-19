@@ -52,7 +52,7 @@ impl Renderer {
 
         self.layers
             .insert("timeline".to_string(), context.svg.clone());
-        let _ = self.root.append_child(&context.svg);
+        //let _ = self.root.append_child(&context.svg);
         Ok(())
     }
 
@@ -60,10 +60,18 @@ impl Renderer {
     //     todo!()
     // }
 
-    // pub fn render_quotation(&self, frame: &Frame, data: &[(f32, f32, f32, f32, f32)]) {
-    // consider a vec<f32>
-    //     todo!()
-    // }
+    pub fn render_quotation(&mut self, frame: &Frame, quotes: Vec<f32>) -> Result<(), JsValue> {
+        let context = SvgRenderingContext::new(self.width, self.height)?;
+        for (i, quote) in quotes.iter().enumerate() {
+            let (x, y) = frame.to_viewport((i as u32, 0.0), (self.width, self.height));
+            context.draw_line((0.0, y), (self.width as f32, y), "black")?;
+            context.draw_text((20.0, y), &quote.to_string(), "white")?;
+        }
+        self.layers
+            .insert("quotes".to_string(), context.svg.clone());
+        let _ = self.root.append_child(&context.svg);
+        Ok(())
+    }
 
     // pub fn render_indicators(&self) {
     //     todo!()
