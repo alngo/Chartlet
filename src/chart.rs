@@ -1,15 +1,19 @@
-use crate::history::{History, Timeframe};
 use wasm_bindgen::prelude::*;
 
 // use crate::graphic::Renderer;
 pub mod frame;
+pub mod history;
 pub mod point;
+
+use frame::Frame;
+use history::{History, Timeframe};
+use point::Point;
 
 #[wasm_bindgen]
 #[derive(Clone, Debug)]
 pub struct Chart {
     history: History,
-    frame: frame::Frame,
+    frame: Frame,
 }
 
 #[wasm_bindgen]
@@ -22,10 +26,10 @@ impl Chart {
 
         Chart {
             history: History::new(timeframe, start_date),
-            frame: frame::Frame {
+            frame: Frame {
                 width: 0,
                 height: 0.0,
-                offset: point::Point::new(0.0, 0.0),
+                offset: Point::new(0.0, 0.0),
             },
         }
     }
@@ -35,8 +39,8 @@ impl Chart {
     }
 
     pub fn set_frame(&mut self, width: u32, height: f32, offset_x: f32, offset_y: f32) {
-        let offset = point::Point::new(offset_x, offset_y);
-        self.frame = frame::Frame::new(width, height, offset);
+        let offset = Point::new(offset_x, offset_y);
+        self.frame = Frame::new(width, height, offset);
     }
 
     pub fn auto_frame(&mut self, from: u32, to: u32) {
@@ -53,7 +57,7 @@ impl Chart {
         }
         let height = max - min;
         let width = to - from;
-        self.frame = frame::Frame::new(width, height, point::Point::new(from as f32, min));
+        self.frame = Frame::new(width, height, Point::new(from as f32, min));
     }
 
     // pub fn render_with(&self, mut renderer: Renderer) {

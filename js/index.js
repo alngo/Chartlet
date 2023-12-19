@@ -1,5 +1,6 @@
 import("../pkg/index.js").then(module => {
     let root = document.getElementById("chartlet");
+    module.init();
     console.log(module);
 
     let renderer = module.Renderer.new(root, root.clientWidth, root.clientHeight);
