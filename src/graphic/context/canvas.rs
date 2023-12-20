@@ -2,13 +2,13 @@ use crate::context::{Context, Coordinate};
 use wasm_bindgen::prelude::{JsCast, JsValue};
 use web_sys::{CanvasRenderingContext2d, HtmlCanvasElement};
 
-pub struct CanvasContext {
+pub struct CanvasRenderingContext {
     pub canvas: HtmlCanvasElement,
     context: CanvasRenderingContext2d,
 }
 
-impl CanvasContext {
-    pub fn new(width: u32, height: u32) -> Result<CanvasContext, JsValue> {
+impl CanvasRenderingContext {
+    pub fn new(width: u32, height: u32) -> Result<CanvasRenderingContext, JsValue> {
         let document = web_sys::window().unwrap().document().unwrap();
         let canvas = document
             .create_element("canvas")?
@@ -19,11 +19,11 @@ impl CanvasContext {
             .get_context("2d")?
             .unwrap()
             .dyn_into::<CanvasRenderingContext2d>()?;
-        Ok(CanvasContext { canvas, context })
+        Ok(CanvasRenderingContext { canvas, context })
     }
 }
 
-impl Context for CanvasContext {
+impl Context for CanvasRenderingContext {
     fn draw_pixel(&self, coord: Coordinate, color: &str) -> Result<(), JsValue> {
         self.context.set_fill_style(&JsValue::from_str(color));
         self.context

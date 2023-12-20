@@ -1,4 +1,4 @@
-use super::{Context, Coordinate};
+use super::{Context, Point};
 use wasm_bindgen::prelude::{JsCast, JsValue};
 use web_sys::{SvgCircleElement, SvgElement, SvgLineElement, SvgRectElement, SvgTextElement};
 
@@ -19,14 +19,17 @@ impl SvgRenderingContext {
     }
 }
 
+// TODO: Remove systematic append?
+// Provide the option to "group"? <g>
+// How to generalize to all context?
 impl Context for SvgRenderingContext {
-    fn draw_pixel(&self, coord: Coordinate, color: &str) -> Result<(), JsValue> {
+    fn draw_pixel(&self, coord: Point, color: &str) -> Result<(), JsValue> {
         let document = web_sys::window().unwrap().document().unwrap();
         let rect = document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "rect")?
             .dyn_into::<SvgRectElement>()?;
-        rect.set_attribute("x", &coord.0.to_string())?;
-        rect.set_attribute("y", &coord.1.to_string())?;
+        rect.set_attribute("x", &coord.x.to_string())?;
+        rect.set_attribute("y", &coord.y.to_string())?;
         rect.set_attribute("width", "1")?;
         rect.set_attribute("height", "1")?;
         rect.set_attribute("fill", color)?;
@@ -34,55 +37,55 @@ impl Context for SvgRenderingContext {
         Ok(())
     }
 
-    fn draw_line(&self, start: Coordinate, end: Coordinate, color: &str) -> Result<(), JsValue> {
+    fn draw_line(&self, start: Point, end: Point, color: &str) -> Result<(), JsValue> {
         let document = web_sys::window().unwrap().document().unwrap();
         let line = document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "line")?
             .dyn_into::<SvgLineElement>()?;
-        line.set_attribute("x1", &start.0.to_string())?;
-        line.set_attribute("y1", &start.1.to_string())?;
-        line.set_attribute("x2", &end.0.to_string())?;
-        line.set_attribute("y2", &end.1.to_string())?;
+        line.set_attribute("x1", &start.x.to_string())?;
+        line.set_attribute("y1", &start.y.to_string())?;
+        line.set_attribute("x2", &end.x.to_string())?;
+        line.set_attribute("y2", &end.y.to_string())?;
         line.set_attribute("stroke", color)?;
         self.svg.append_child(&line)?;
         Ok(())
     }
 
-    fn draw_rect(&self, start: Coordinate, end: Coordinate, color: &str) -> Result<(), JsValue> {
+    fn draw_rect(&self, start: Point, end: Point, color: &str) -> Result<(), JsValue> {
         let document = web_sys::window().unwrap().document().unwrap();
         let rect = document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "rect")?
             .dyn_into::<SvgRectElement>()?;
-        rect.set_attribute("x", &start.0.to_string())?;
-        rect.set_attribute("y", &start.1.to_string())?;
-        rect.set_attribute("width", &end.0.to_string())?;
-        rect.set_attribute("height", &end.1.to_string())?;
+        rect.set_attribute("x", &start.x.to_string())?;
+        rect.set_attribute("y", &start.y.to_string())?;
+        rect.set_attribute("width", &end.x.to_string())?;
+        rect.set_attribute("height", &end.y.to_string())?;
         rect.set_attribute("stroke", "black")?;
         rect.set_attribute("fill", color)?;
         self.svg.append_child(&rect)?;
         Ok(())
     }
 
-    fn draw_circle(&self, center: Coordinate, radius: f32, color: &str) -> Result<(), JsValue> {
+    fn draw_circle(&self, center: Point, radius: f32, color: &str) -> Result<(), JsValue> {
         let document = web_sys::window().unwrap().document().unwrap();
         let circle = document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "circle")?
             .dyn_into::<SvgCircleElement>()?;
-        circle.set_attribute("cx", &center.0.to_string())?;
-        circle.set_attribute("cy", &center.1.to_string())?;
+        circle.set_attribute("cx", &center.x.to_string())?;
+        circle.set_attribute("cy", &center.y.to_string())?;
         circle.set_attribute("r", &radius.to_string())?;
         circle.set_attribute("fill", color)?;
         self.svg.append_child(&circle)?;
         Ok(())
     }
 
-    fn draw_text(&self, position: Coordinate, text: &str, color: &str) -> Result<(), JsValue> {
+    fn draw_text(&self, position: Point, text: &str, color: &str) -> Result<(), JsValue> {
         let document = web_sys::window().unwrap().document().unwrap();
         let text_element = document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "text")?
             .dyn_into::<SvgTextElement>()?;
-        text_element.set_attribute("x", &position.0.to_string())?;
-        text_element.set_attribute("y", &position.1.to_string())?;
+        text_element.set_attribute("x", &position.x.to_string())?;
+        text_element.set_attribute("y", &position.y.to_string())?;
         text_element.set_attribute("fill", color)?;
         text_element.set_attribute("font-size", "12")?;
         text_element.set_attribute("font-family", "monospace")?;

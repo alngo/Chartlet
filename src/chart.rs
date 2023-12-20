@@ -1,6 +1,8 @@
 use wasm_bindgen::prelude::*;
 
 // use crate::graphic::Renderer;
+use crate::builder::Builder;
+
 pub mod frame;
 pub mod history;
 pub mod point;
@@ -19,11 +21,6 @@ pub struct Chart {
 #[wasm_bindgen]
 impl Chart {
     pub fn new(timeframe: Timeframe, start_date: u32) -> Chart {
-        // This provides better error messages in debug mode.
-        // It's disabled in release mode so it doesn't bloat up the file size.
-        #[cfg(debug_assertions)]
-        console_error_panic_hook::set_once();
-
         Chart {
             history: History::new(timeframe, start_date),
             frame: Frame {
@@ -60,26 +57,13 @@ impl Chart {
         self.frame = Frame::new(width, height, Point::new(from as f32, min));
     }
 
-    // pub fn render_with(&self, mut renderer: Renderer) {
-    // let _ = renderer.render_timeline(
-    //     &self.frame,
-    //     self.history
-    //         .get_timeline(self.frame.offset.0, self.frame.offset.0 + self.frame.width),
-    // );
-
-    // let _ = renderer.render_quotation(
-    //     &self.frame,
-    //     self.history
-    //     .get_quotation(self.frame.offset.0, self.frame.offset.0 + self.frame.width),
-    //     );
-    // renderer.render_chart(
-    //     &self.frame,
-    //     self.history
-    //         .get_data(self.frame.offset.0, self.frame.offset.0 + self.frame.width),
-    // );
-    // renderer.render_indicators();
-    // renderer.render_objects();
-    // }
+    pub fn build_with(&self, builder: &Builder) {
+        let timeline = self.history.get_timeline(
+            self.frame.offset.x as u32,
+            self.frame.offset.x as u32 + self.frame.width,
+        );
+        builder.build_timeline(timeline);
+    }
 }
 
 #[cfg(test)]
