@@ -1,6 +1,6 @@
 pub mod context {
-    use crate::chart::point::Point;
-    use wasm_bindgen::prelude::JsValue;
+    pub use crate::chart::point::Point;
+    pub use wasm_bindgen::prelude::JsValue;
 
     pub mod svg;
 
@@ -14,5 +14,22 @@ pub mod context {
 }
 
 pub mod composite {
+    pub use crate::chart::point::Point;
+    pub use crate::graphic::context;
 
+    pub mod timeline;
+
+    pub trait Draw {
+        fn draw(&self, context: &dyn context::Context);
+    }
+
+    pub trait Composable {
+        fn insert(&mut self, component: &impl Draw);
+        fn remove(&mut self, component: &impl Draw);
+    }
+    // Draft Draw a timeline composed by a vertical line and an optional text
+    // <g> for grouping
+    //  <line>...
+    //  <text>...
+    // </g>
 }
