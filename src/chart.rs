@@ -62,7 +62,7 @@ impl Chart {
             self.frame.offset.x as u32,
             self.frame.offset.x as u32 + self.frame.width,
         );
-        builder.build_timeline(timeline);
+        builder.build_timeline(self.frame.clone(), timeline);
     }
 }
 
