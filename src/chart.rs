@@ -25,8 +25,7 @@ impl Chart {
             history: History::new(timeframe, start_date),
             frame: Frame {
                 width: 0,
-                height: 0.0,
-                offset: Point::new(0.0, 0.0),
+                height: 0.0, offset: Point::new(0.0, 0.0),
             },
         }
     }
@@ -41,17 +40,17 @@ impl Chart {
     }
 
     pub fn auto_frame(&mut self, from: u32, to: u32) {
-        let data = self.history.get_data(from, to);
-        let mut min = data[0].2;
-        let mut max = data[0].1;
-        for (_, high, low, _, _) in data {
-            if high > &max {
-                max = *high;
+        let datas = self.history.get_data(from, to);
+        let mut min = datas[0].low;
+        let mut max = datas[0].high;
+        datas.into_iter().for_each(|data| {
+            if data.high > max {
+                max = data.high;
             }
-            if low < &min {
-                min = *low;
+            if data.low < min {
+                min = data.low;
             }
-        }
+        });
         let height = max - min;
         let width = to - from;
         self.frame = Frame::new(width, height, Point::new(from as f32, min));
@@ -64,6 +63,9 @@ impl Chart {
         );
         builder.build_timeline(self.frame.clone(), timeline);
         builder.build_quotation(self.frame.clone());
+        builder.build_candles(self.frame.clone(), self.history.get_data(
+            self.frame.offset.x as u32,
+            self.frame.offset.x as u32 + self.frame.width,));
     }
 }
 
@@ -81,7 +83,7 @@ mod chart_tests {
     fn test_add_data() {
         let mut chart = Chart::new(Timeframe::M5, 0);
         chart.add_data(1.0, 2.0, 3.0, 4.0, 5.0);
-        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [(1.0, 2.0, 3.0, 4.0, 5.0)], timeframe: M5, start_date: 0 }, frame: Frame { width: 0, height: 0.0, offset: Point { x: 0.0, y: 0.0 } } }");
+        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [Data { open: 1.0, high: 2.0, low: 3.0, close: 4.0, volume: 5.0 }], timeframe: M5, start_date: 0 }, frame: Frame { width: 0, height: 0.0, offset: Point { x: 0.0, y: 0.0 } } }");
     }
 
     #[test]
@@ -94,7 +96,7 @@ mod chart_tests {
         chart.add_data(5.0, 6.0, 7.0, 8.0, 9.0);
         chart.add_data(6.0, 7.0, 8.0, 9.0, 10.0);
         chart.auto_frame(0, 6);
-        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [(1.0, 2.0, 3.0, 4.0, 5.0), (2.0, 3.0, 4.0, 5.0, 6.0), (3.0, 4.0, 5.0, 6.0, 7.0), (4.0, 5.0, 6.0, 7.0, 8.0), (5.0, 6.0, 7.0, 8.0, 9.0), (6.0, 7.0, 8.0, 9.0, 10.0)], timeframe: M5, start_date: 0 }, frame: Frame { width: 6, height: 4.0, offset: Point { x: 0.0, y: 3.0 } } }");
+        assert_eq!(format!("{:?}", chart), "Chart { history: History { data: [Data { open: 1.0, high: 2.0, low: 3.0, close: 4.0, volume: 5.0 }, Data { open: 2.0, high: 3.0, low: 4.0, close: 5.0, volume: 6.0 }, Data { open: 3.0, high: 4.0, low: 5.0, close: 6.0, volume: 7.0 }, Data { open: 4.0, high: 5.0, low: 6.0, close: 7.0, volume: 8.0 }, Data { open: 5.0, high: 6.0, low: 7.0, close: 8.0, volume: 9.0 }, Data { open: 6.0, high: 7.0, low: 8.0, close: 9.0, volume: 10.0 }], timeframe: M5, start_date: 0 }, frame: Frame { width: 6, height: 4.0, offset: Point { x: 0.0, y: 3.0 } } }");
     }
 
     #[test]

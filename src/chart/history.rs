@@ -11,8 +11,28 @@ pub enum Timeframe {
     H1,
 }
 
-// (open, high, low, close, volume)
-type Data = (f32, f32, f32, f32, f32);
+#[wasm_bindgen]
+#[derive(Clone, Debug)]
+pub struct Data {
+    pub(crate) open: f32,
+    pub(crate) high: f32,
+    pub(crate) low: f32,
+    pub(crate) close: f32,
+    pub(crate) volume: f32,
+}
+
+impl Data {
+    pub fn new(open: f32, high: f32, low: f32, close: f32, volume: f32) -> Data {
+        Data {
+            open,
+            high,
+            low,
+            close,
+            volume,
+        }
+    }
+    
+}
 
 #[wasm_bindgen]
 #[derive(Clone, Debug)]
@@ -25,21 +45,21 @@ impl History {
     pub fn new(timeframe: Timeframe, start_date: u32) -> History {
         History {
             data: Vec::new(),
-            timeframe: timeframe,
-            start_date: start_date,
+            timeframe,
+            start_date,
         }
     }
 
     pub fn insert(&mut self, open: f32, high: f32, low: f32, close: f32, volume: f32) {
-        self.data.push((open, high, low, close, volume));
+        self.data.push(Data::new(open, high, low, close, volume));
     }
 
-    pub fn get_data(&self, from: u32, to: u32) -> &[Data] {
+    pub fn get_data(&self, from: u32, to: u32) -> Vec<Data> {
         if from as usize > self.data.len() {
-            return &[];
+            return [].to_vec();
         }
         let end = cmp::min(self.data.len(), to as usize);
-        self.data.get(from as usize..end).unwrap()
+        self.data.get(from as usize..end).unwrap().to_vec()
     }
 
     pub fn get_timeline(&self, from: u32, to: u32) -> Vec<u32> {

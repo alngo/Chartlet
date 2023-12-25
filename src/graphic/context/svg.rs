@@ -56,6 +56,7 @@ impl Context for SvgRenderingContext {
         let rect = document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "rect")?
             .dyn_into::<SvgRectElement>()?;
+
         rect.set_attribute("x", &start.x.to_string())?;
         rect.set_attribute("y", &start.y.to_string())?;
         rect.set_attribute("width", &end.x.to_string())?;
@@ -89,7 +90,7 @@ impl Context for SvgRenderingContext {
         text_element.set_attribute("fill", color)?;
         text_element.set_attribute("font-size", "12")?;
         text_element.set_attribute("font-family", "monospace")?;
-        text_element.set_attribute("text-anchor", "start")?;
+        text_element.set_attribute("text-anchor", "end")?;
         text_element.set_inner_html(text);
         self.svg.append_child(&text_element)?;
         Ok(())

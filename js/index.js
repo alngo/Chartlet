@@ -21,6 +21,10 @@ import("../pkg/index.js").then(module => {
             console.log("Custom Builder: build_quotation")
         },
 
+        build_candles: () => {
+            console.log("Custom Builder: build_candles")
+        },
+
         get_context: () => {
             console.log("Custom Builder: get_context")
         },

@@ -2,6 +2,7 @@ use wasm_bindgen::prelude::*;
 use web_sys::*;
 
 use crate::chart::frame::Frame;
+use crate::chart::history::Data;
 use crate::graphic::composite::Point;
 use crate::graphic::context::svg::SvgRenderingContext;
 use crate::graphic::context::Context;
@@ -51,10 +52,29 @@ impl DefaultBuilder {
             console::log_1(&JsValue::from_str(text.as_str()));
             self.context.draw_line(start, end, "white").unwrap();
             self.context
-                .draw_text(start, text.as_str(), "white")
+                .draw_text(end, text.as_str(), "white")
                 .unwrap();
             begin += 0.001;
         }
+    }
+
+    pub fn build_candles(&self, frame: Frame, data: Vec<Data>) {
+        data.iter().enumerate().for_each(|(i, d)| {
+            let point = Point::new(i as f32 + 0.5, d.low);
+            let start = frame.to_viewport(point, self.width, self.height);
+            let point = Point::new(i as f32 + 0.5, d.high);
+            let end = frame.to_viewport(point, self.width, self.height);
+            self.context.draw_line(start, end, "white").unwrap();
+
+            let point = Point::new(i as f32, d.open);
+            let start = frame.to_viewport(point, self.width, self.height);
+            let point = Point::new(1.0, d.close);
+            console::log_1(&JsValue::from_str(format!("{:?}", point).as_str()));
+            let end = frame.to_viewport(point, self.width, self.height);
+            let color = if d.open > d.close { "red" } else { "green" };
+            self.context.draw_rect(start, end, color).unwrap();
+        });
+
     }
 
     pub fn get_context(&self) -> SvgElement {
