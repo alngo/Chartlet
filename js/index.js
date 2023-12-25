@@ -1,8 +1,9 @@
 import("../pkg/index.js").then(module => {
     console.log(module);
     module.init();
+    let chartlet = document.getElementById("chartlet");
 
-    let default_builder = module.DefaultBuilder.new();
+    let default_builder = module.DefaultBuilder.new(chartlet.clientWidth, chartlet.clientHeight);
     let chart = module.Chart.new(module.Timeframe.M5, 0);
     chart.add_data(1.1000, 1.1030, 1.0990, 1.1010, 100);
     chart.add_data(1.1010, 1.1030, 1.1000, 1.1020, 100);
@@ -20,7 +21,6 @@ import("../pkg/index.js").then(module => {
     chart.build_with(default_builder);
     chart.build_with(custom_builder);
     let svg = default_builder.get_context();
-    let div = document.getElementById("chartlet");
-    div.appendChild(svg);
+    chartlet.appendChild(svg);
 
 }).catch(console.error);

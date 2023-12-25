@@ -43,10 +43,6 @@ impl History {
     }
 
     pub fn get_timeline(&self, from: u32, to: u32) -> Vec<u32> {
-        // TODO: Consider removing this calculation
-        // if user want to display grid based on 1h, 30mn, etc..
-        // Unnecessary calculation
-        // start time should be enough
         const MINUTE: u32 = 60;
         let multiplier = match self.timeframe {
             Timeframe::M5 => 5,

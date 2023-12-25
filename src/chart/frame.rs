@@ -14,14 +14,12 @@ pub struct Frame {
 impl Frame {
     pub fn new(width: u32, height: f32, offset: Point) -> Frame {
         Frame {
-            width: width,
-            height: height,
-            offset: offset,
+            width,
+            height,
+            offset,
         }
     }
 
-    // How to pass this to the builder?
-    // Within Js, and in rust
     pub fn to_viewport(&self, point: Point, width: u32, height: u32) -> Point {
         let x_scale = self.width as f32 / width as f32;
         let y_scale = self.height / height as f32;
