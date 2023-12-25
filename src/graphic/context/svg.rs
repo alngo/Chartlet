@@ -51,7 +51,13 @@ impl Context for SvgRenderingContext {
         Ok(())
     }
 
-    fn draw_rect(&self, start: Point, end: Point, color: &str) -> Result<(), JsValue> {
+    fn draw_rect(
+        &self,
+        start: Point,
+        width: &str,
+        height: &str,
+        color: &str,
+    ) -> Result<(), JsValue> {
         let document = web_sys::window().unwrap().document().unwrap();
         let rect = document
             .create_element_ns(Some("http://www.w3.org/2000/svg"), "rect")?
@@ -59,9 +65,10 @@ impl Context for SvgRenderingContext {
 
         rect.set_attribute("x", &start.x.to_string())?;
         rect.set_attribute("y", &start.y.to_string())?;
-        rect.set_attribute("width", &end.x.to_string())?;
-        rect.set_attribute("height", &end.y.to_string())?;
-        rect.set_attribute("stroke", "black")?;
+        rect.set_attribute("width", width)?;
+        rect.set_attribute("height", height)?;
+        rect.set_attribute("stroke", color)?;
+        rect.set_attribute("stroke-width", "1")?;
         rect.set_attribute("fill", color)?;
         self.svg.append_child(&rect)?;
         Ok(())

@@ -25,7 +25,8 @@ impl Chart {
             history: History::new(timeframe, start_date),
             frame: Frame {
                 width: 0,
-                height: 0.0, offset: Point::new(0.0, 0.0),
+                height: 0.0,
+                offset: Point::new(0.0, 0.0),
             },
         }
     }
@@ -63,9 +64,13 @@ impl Chart {
         );
         builder.build_timeline(self.frame.clone(), timeline);
         builder.build_quotation(self.frame.clone());
-        builder.build_candles(self.frame.clone(), self.history.get_data(
-            self.frame.offset.x as u32,
-            self.frame.offset.x as u32 + self.frame.width,));
+        builder.build_candles(
+            self.frame.clone(),
+            self.history.get_data(
+                self.frame.offset.x as u32,
+                self.frame.offset.x as u32 + self.frame.width,
+            ),
+        );
     }
 }
 

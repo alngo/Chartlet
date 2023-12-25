@@ -31,7 +31,6 @@ impl Data {
             volume,
         }
     }
-    
 }
 
 #[wasm_bindgen]

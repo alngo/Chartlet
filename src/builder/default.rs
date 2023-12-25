@@ -15,7 +15,6 @@ pub struct DefaultBuilder {
     height: u32,
     context: SvgRenderingContext,
 }
-
 #[wasm_bindgen]
 impl DefaultBuilder {
     pub fn new(width: u32, height: u32) -> DefaultBuilder {
@@ -29,13 +28,13 @@ impl DefaultBuilder {
 
     pub fn build_timeline(&self, frame: Frame, timeline: Vec<u32>) {
         timeline.iter().enumerate().for_each(|(i, t)| {
-            let point = Point::new(i as f32, 0.0);
+            let point = Point::new(i as f32 + 0.5, 0.0);
             let start = frame.to_viewport(point, self.width, self.height);
             let end = Point::new(start.x, self.height as f32);
             let text = NaiveDateTime::from_timestamp(*t as i64, 0)
                 .format("%H:%M:%S")
                 .to_string();
-            self.context.draw_line(start, end, "white").unwrap();
+            self.context.draw_line(start, end, "grey").unwrap();
             self.context.draw_text(end, text.as_str(), "white").unwrap();
         });
     }
@@ -50,10 +49,8 @@ impl DefaultBuilder {
             let end = Point::new(self.width as f32, start.y);
             let text = format!("{:.5}", begin);
             console::log_1(&JsValue::from_str(text.as_str()));
-            self.context.draw_line(start, end, "white").unwrap();
-            self.context
-                .draw_text(end, text.as_str(), "white")
-                .unwrap();
+            self.context.draw_line(start, end, "grey").unwrap();
+            self.context.draw_text(end, text.as_str(), "white").unwrap();
             begin += 0.001;
         }
     }
@@ -66,15 +63,28 @@ impl DefaultBuilder {
             let end = frame.to_viewport(point, self.width, self.height);
             self.context.draw_line(start, end, "white").unwrap();
 
-            let point = Point::new(i as f32, d.open);
-            let start = frame.to_viewport(point, self.width, self.height);
-            let point = Point::new(1.0, d.close);
-            console::log_1(&JsValue::from_str(format!("{:?}", point).as_str()));
-            let end = frame.to_viewport(point, self.width, self.height);
-            let color = if d.open > d.close { "red" } else { "green" };
-            self.context.draw_rect(start, end, color).unwrap();
+            if d.open > d.close {
+                let point = Point::new(i as f32, d.close);
+                let start = frame.to_viewport(point, self.width, self.height);
+                let point = Point::new(1.0, d.open);
+                let end = frame.to_viewport(point, self.width, self.height);
+                let height = end.y - start.y;
+                let height = if height < 1.0 { 1.0 } else { height };
+                self.context
+                    .draw_rect(start, &end.x.to_string(), &height.to_string(), "red")
+                    .unwrap();
+            } else {
+                let point = Point::new(i as f32, d.open);
+                let start = frame.to_viewport(point, self.width, self.height);
+                let point = Point::new(1.0, d.close);
+                let end = frame.to_viewport(point, self.width, self.height);
+                let height = end.y - start.y;
+                let height = if height < 1.0 { 1.0 } else { height };
+                self.context
+                    .draw_rect(start, &end.x.to_string(), &height.to_string(), "green")
+                    .unwrap();
+            }
         });
-
     }
 
     pub fn get_context(&self) -> SvgElement {

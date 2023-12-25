@@ -40,10 +40,9 @@ impl Context for CanvasRenderingContext {
         Ok(())
     }
 
-    fn draw_rect(&self, start: Coordinate, end: Coordinate, color: &str) -> Result<(), JsValue> {
+    fn draw_rect(&self, start: Coordinate, width: u32, height: u32, color: &str) -> Result<(), JsValue> {
         self.context.set_fill_style(&JsValue::from_str(color));
-        self.context
-            .fill_rect(start.0 as f64, start.1 as f64, end.0 as f64, end.1 as f64);
+        self.context.fill_rect(start.0 as f64, start.1 as f64, width as f64, height as f64);
         Ok(())
     }
 
