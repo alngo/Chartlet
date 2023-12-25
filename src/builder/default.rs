@@ -3,6 +3,7 @@ use web_sys::*;
 
 use crate::chart::frame::Frame;
 use crate::graphic::composite::Point;
+use crate::graphic::context::Context;
 use crate::graphic::context::svg::SvgRenderingContext;
 
 #[wasm_bindgen]
@@ -18,13 +19,15 @@ impl DefaultBuilder {
     }
 
     pub fn build_timeline(&self, frame: Frame, timeline: Vec<u32>) {
-        console::log_1(&JsValue::from_str("Hello from default builder"));
-        let point = Point::new(1.0, 1.0990);
-        let vpoint = frame.to_viewport(point, 100, 100);
-        console::log_3(
-            &JsValue::from_str("vpoint: "),
-            &JsValue::from_f64(vpoint.x as f64),
-            &JsValue::from_f64(vpoint.y as f64),
-        );
+        timeline.iter().for_each(|t| {
+            let point = Point::new(*t as f32, 1.0);
+            let start = frame.to_viewport(point, 100, 100);
+            let end = Point::new(0.0, 100.0);
+            self.context.draw_line(start, end, "white").unwrap();
+        });
+    }
+
+    pub fn get_context(&self) -> SvgElement {
+        self.context.svg.clone()
     }
 }

@@ -19,5 +19,8 @@ import("../pkg/index.js").then(module => {
 
     chart.build_with(default_builder);
     chart.build_with(custom_builder);
+    let svg = default_builder.get_context();
+    let div = document.getElementById("chartlet");
+    div.appendChild(svg);
 
 }).catch(console.error);
