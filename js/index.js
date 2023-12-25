@@ -14,8 +14,16 @@ import("../pkg/index.js").then(module => {
 
     const custom_builder = {
         build_timeline: () => {
-            console.log("Hello from custom Builder")
-        }
+            console.log("Custom Builder: build_timeline")
+        },
+
+        build_quotation: () => {
+            console.log("Custom Builder: build_quotation")
+        },
+
+        get_context: () => {
+            console.log("Custom Builder: get_context")
+        },
     }
 
     chart.build_with(default_builder);

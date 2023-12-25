@@ -14,4 +14,10 @@ extern "C" {
 
     #[wasm_bindgen(structural, method)]
     pub fn build_timeline(this: &Builder, frame: Frame, timeline: Vec<u32>);
+
+    #[wasm_bindgen(structural, method)]
+    pub fn build_quotation(this: &Builder, frame: Frame);
+
+    #[wasm_bindgen(structural, method)]
+    pub fn get_context(this: &Builder) -> HtmlElement;
 }

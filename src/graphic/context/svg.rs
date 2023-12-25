@@ -89,7 +89,7 @@ impl Context for SvgRenderingContext {
         text_element.set_attribute("fill", color)?;
         text_element.set_attribute("font-size", "12")?;
         text_element.set_attribute("font-family", "monospace")?;
-        text_element.set_attribute("text-anchor", "middle")?;
+        text_element.set_attribute("text-anchor", "start")?;
         text_element.set_inner_html(text);
         self.svg.append_child(&text_element)?;
         Ok(())

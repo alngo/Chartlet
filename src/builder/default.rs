@@ -31,12 +31,30 @@ impl DefaultBuilder {
             let point = Point::new(i as f32, 0.0);
             let start = frame.to_viewport(point, self.width, self.height);
             let end = Point::new(start.x, self.height as f32);
-            self.context.draw_line(start, end, "white").unwrap();
             let text = NaiveDateTime::from_timestamp(*t as i64, 0)
-                .format("%Y-%m-%d %H:%M:%S")
+                .format("%H:%M:%S")
                 .to_string();
+            self.context.draw_line(start, end, "white").unwrap();
             self.context.draw_text(end, text.as_str(), "white").unwrap();
         });
+    }
+
+    pub fn build_quotation(&self, frame: Frame) {
+        let mut begin: f32 = frame.offset.y;
+        let end = frame.offset.y + frame.height;
+
+        while begin < end {
+            let point = Point::new(0.0, begin);
+            let start = frame.to_viewport(point, self.width, self.height);
+            let end = Point::new(self.width as f32, start.y);
+            let text = format!("{:.5}", begin);
+            console::log_1(&JsValue::from_str(text.as_str()));
+            self.context.draw_line(start, end, "white").unwrap();
+            self.context
+                .draw_text(start, text.as_str(), "white")
+                .unwrap();
+            begin += 0.001;
+        }
     }
 
     pub fn get_context(&self) -> SvgElement {
