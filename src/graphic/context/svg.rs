@@ -4,6 +4,7 @@ use web_sys::{SvgCircleElement, SvgElement, SvgLineElement, SvgRectElement, SvgT
 
 pub struct SvgRenderingContext {
     pub svg: SvgElement,
+    pub g: SvgElement,
 }
 
 impl SvgRenderingContext {
@@ -15,7 +16,15 @@ impl SvgRenderingContext {
         svg.set_attribute("width", &width.to_string())?;
         svg.set_attribute("height", &height.to_string())?;
         svg.set_attribute("viewBox", &format!("0 0 {} {}", width, height))?;
-        Ok(SvgRenderingContext { svg })
+        let g = document
+            .create_element_ns(Some("http://www.w3.org/2000/svg"), "g")?
+            .dyn_into::<SvgElement>()?;
+        g.set_attribute(
+            "transform",
+            format!("matrix(1 0 0 -1 0 {})", height).as_str(),
+        )?;
+        svg.append_child(&g)?;
+        Ok(SvgRenderingContext { svg, g })
     }
 }
 
@@ -33,7 +42,7 @@ impl Context for SvgRenderingContext {
         rect.set_attribute("width", "1")?;
         rect.set_attribute("height", "1")?;
         rect.set_attribute("fill", color)?;
-        self.svg.append_child(&rect)?;
+        self.g.append_child(&rect)?;
         Ok(())
     }
 
@@ -47,7 +56,8 @@ impl Context for SvgRenderingContext {
         line.set_attribute("x2", &end.x.to_string())?;
         line.set_attribute("y2", &end.y.to_string())?;
         line.set_attribute("stroke", color)?;
-        self.svg.append_child(&line)?;
+        line.set_attribute("stroke-width", "1")?;
+        self.g.append_child(&line)?;
         Ok(())
     }
 
@@ -70,7 +80,7 @@ impl Context for SvgRenderingContext {
         rect.set_attribute("stroke", color)?;
         rect.set_attribute("stroke-width", "1")?;
         rect.set_attribute("fill", color)?;
-        self.svg.append_child(&rect)?;
+        self.g.append_child(&rect)?;
         Ok(())
     }
 
@@ -83,7 +93,7 @@ impl Context for SvgRenderingContext {
         circle.set_attribute("cy", &center.y.to_string())?;
         circle.set_attribute("r", &radius.to_string())?;
         circle.set_attribute("fill", color)?;
-        self.svg.append_child(&circle)?;
+        self.g.append_child(&circle)?;
         Ok(())
     }
 
@@ -98,8 +108,9 @@ impl Context for SvgRenderingContext {
         text_element.set_attribute("font-size", "12")?;
         text_element.set_attribute("font-family", "monospace")?;
         text_element.set_attribute("text-anchor", "end")?;
+        text_element.set_attribute("transform", "scale(1, -1)")?;
         text_element.set_inner_html(text);
-        self.svg.append_child(&text_element)?;
+        self.g.append_child(&text_element)?;
         Ok(())
     }
 }

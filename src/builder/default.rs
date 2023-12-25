@@ -31,11 +31,14 @@ impl DefaultBuilder {
             let point = Point::new(i as f32 + 0.5, 0.0);
             let start = frame.to_viewport(point, self.width, self.height);
             let end = Point::new(start.x, self.height as f32);
-            let text = NaiveDateTime::from_timestamp(*t as i64, 0)
+            let text = NaiveDateTime::from_timestamp_opt(59, *t as u32)
+                .unwrap()
                 .format("%H:%M:%S")
                 .to_string();
             self.context.draw_line(start, end, "grey").unwrap();
-            self.context.draw_text(end, text.as_str(), "white").unwrap();
+            self.context
+                .draw_text(start, text.as_str(), "white")
+                .unwrap();
         });
     }
 
