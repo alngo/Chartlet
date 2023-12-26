@@ -51,7 +51,6 @@ impl DefaultBuilder {
             let start = frame.to_viewport(point, self.width, self.height);
             let end = Point::new(self.width as f32, start.y);
             let text = format!("{:.5}", begin);
-            console::log_1(&JsValue::from_str(text.as_str()));
             self.context.draw_line(start, end, "grey").unwrap();
             self.context.draw_text(end, text.as_str(), "white").unwrap();
             begin += 0.001;
