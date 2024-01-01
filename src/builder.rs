@@ -23,5 +23,5 @@ extern "C" {
     pub fn build_candles(this: &Builder, frame: Frame, data: Vec<Data>);
 
     #[wasm_bindgen(structural, method)]
-    pub fn get_context(this: &Builder) -> HtmlElement;
+    pub fn get_context(this: &Builder) -> JsValue;
 }
