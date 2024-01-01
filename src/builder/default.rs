@@ -89,7 +89,7 @@ impl DefaultBuilder {
         });
     }
 
-    pub fn get_context(&self) -> SvgElement {
-        self.context.svg.clone()
+    pub fn get_context(&self) -> JsValue {
+        serde_wasm_bindgen::to_value(&self.context.svg).unwrap()
     }
 }
