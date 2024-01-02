@@ -66,7 +66,6 @@ pub fn load_layers() -> JsValue {
     serde_wasm_bindgen::to_value(&layers).unwrap()
 }
 
-
 fn set_panic_hook() {
     // This provides better error messages in debug mode.
     // It's disabled in release mode so it doesn't bloat up the file size.
