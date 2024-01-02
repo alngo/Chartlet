@@ -30,6 +30,9 @@ import("../pkg/index.js").then(module => {
         },
     }
 
+    let layers = module.load_layers();
+    console.log(layers);
+
     chart.build_with(default_builder);
     chart.build_with(custom_builder);
     let svg = default_builder.get_context();
