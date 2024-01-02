@@ -1,3 +1,22 @@
+// pub mod chart {
+//     pub use crate::chart::point::Point;
+//     pub use crate::chart::scale::Scale;
+//     pub use crate::chart::axis::Axis;
+//     pub use crate::chart::grid::Grid;
+//     pub use crate::chart::legend::Legend;
+//     pub use crate::chart::series::Series;
+//     pub use crate::chart::chart::Chart;
+//
+//     pub mod point;
+//     pub mod scale;
+//     pub mod axis;
+//     pub mod grid;
+//     pub mod legend;
+//     pub mod series;
+//     pub mod chart;
+// }
+//
+
 pub mod context {
     pub use crate::chart::point::Point;
     pub use wasm_bindgen::prelude::JsValue;
@@ -23,6 +42,9 @@ pub mod composite {
     pub use crate::chart::point::Point;
     pub use crate::graphic::context;
 
+    pub mod circle;
+    pub mod rectangle;
+    pub mod shape;
     pub mod timeline;
 
     pub trait Draw {
@@ -33,9 +55,4 @@ pub mod composite {
         fn insert(&mut self, component: &impl Draw);
         fn remove(&mut self, component: &impl Draw);
     }
-    // Draft Draw a timeline composed by a vertical line and an optional text
-    // <g> for grouping
-    //  <line>...
-    //  <text>...
-    // </g>
 }
