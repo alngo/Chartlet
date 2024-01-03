@@ -3,7 +3,9 @@ mod list;
 
 use data::DataList;
 use list::List;
+use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize)]
 pub struct Model {
     data: DataList,
     // IndicatorsList
