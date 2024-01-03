@@ -1,6 +1,7 @@
 use super::list::List;
+use serde::{Deserialize, Serialize};
 
-#[derive(Default, Clone, Debug)]
+#[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct Data {
     pub timestamp: u64,
     pub open: f64,
@@ -23,7 +24,7 @@ impl Data {
     }
 }
 
-#[derive(Default, Clone, Debug)]
+#[derive(Default, Clone, Debug, Serialize, Deserialize)]
 pub struct DataList {
     data: Vec<Data>,
 }
