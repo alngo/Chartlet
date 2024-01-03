@@ -1,9 +1,9 @@
 # You must change these to your own details.
 [package]
-name = "chartlet"
-description = "Chartlet"
+name = "rust-webpack-template"
+description = "My super awesome Rust, WebAssembly, and Webpack project!"
 version = "0.1.0"
-authors = ["Alngo <you@example.com>"]
+authors = ["You <you@example.com>"]
 categories = ["wasm"]
 readme = "README.md"
 edition = "2018"
@@ -18,16 +18,12 @@ lto = true
 
 [features]
 # If you uncomment this line, it will enable `wee_alloc`:
-default = ["wee_alloc"]
+#default = ["wee_alloc"]
 
 [dependencies]
 # The `wasm-bindgen` crate provides the bare minimum functionality needed
 # to interact with JavaScript.
 wasm-bindgen = "0.2.45"
-serde = { version = "1.0", features = ["derive"] }
-serde-wasm-bindgen = "0.4"
-chrono = "0.4"
-
 
 # `wee_alloc` is a tiny allocator for wasm that is only ~1K in code size
 # compared to the default allocator's ~10K. However, it is slower than the default
@@ -37,25 +33,8 @@ wee_alloc = { version = "0.4.2", optional = true }
 # The `web-sys` crate allows you to interact with the various browser APIs,
 # like the DOM.
 [dependencies.web-sys]
-version = "0.3.66"
-features = [
-  'console',
-  'CanvasRenderingContext2d',
-  'CssStyleDeclaration',
-  'Document',
-  'Element',
-  'EventTarget',
-  'HtmlCanvasElement',
-  'HtmlElement',
-  'MouseEvent',
-  'Node',
-  'Window',
-  'SvgElement',
-  'SvgRectElement',
-  'SvgLineElement',
-  'SvgCircleElement',
-  'SvgTextElement',
-]
+version = "0.3.22"
+features = ["console","Document","Node", "Element", "HtmlElement", "Window"]
 
 # The `console_error_panic_hook` crate provides better debugging of panics by
 # logging them with `console.error`. This is great for development, but requires
