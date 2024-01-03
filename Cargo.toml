@@ -1,9 +1,9 @@
 # You must change these to your own details.
 [package]
-name = "rust-webpack-template"
-description = "My super awesome Rust, WebAssembly, and Webpack project!"
+name = "chartlet"
+description = "Chartlet"
 version = "0.1.0"
-authors = ["You <you@example.com>"]
+authors = ["Alngo <you@example.com>"]
 categories = ["wasm"]
 readme = "README.md"
 edition = "2018"
@@ -18,7 +18,7 @@ lto = true
 
 [features]
 # If you uncomment this line, it will enable `wee_alloc`:
-#default = ["wee_alloc"]
+default = ["wee_alloc"]
 
 [dependencies]
 # The `wasm-bindgen` crate provides the bare minimum functionality needed
