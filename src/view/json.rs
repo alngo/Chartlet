@@ -1,4 +1,3 @@
-use super::model::data::Data;
 use super::model::Model;
 use super::{View, ViewError};
 
@@ -14,7 +13,7 @@ impl View<String> for JsonView {
 #[cfg(test)]
 mod json_view_tests {
     use super::*;
-    use crate::model::Model;
+    use crate::model::{data::Data, Model};
 
     #[test]
     fn test_json_view() {
