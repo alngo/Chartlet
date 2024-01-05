@@ -1,21 +1,26 @@
 mod data;
+mod frame;
 
 use data::{DataController, DataControllerMessage};
+use frame::{FrameController, FrameControllerMessage};
 
 use crate::model::Model;
 
 pub enum ControllerMessage {
     DataController(DataControllerMessage),
+    FrameController(FrameControllerMessage),
 }
 
-struct Controller {
+pub struct Controller {
     data_controller: DataController,
+    frame_controller: FrameController,
 }
 
 impl Controller {
     pub fn new(model: &Model) -> Controller {
         Controller {
             data_controller: DataController::new(model.data_list.clone()),
+            frame_controller: FrameController::new(model.frame.clone()),
         }
     }
 
@@ -23,6 +28,9 @@ impl Controller {
         match message {
             ControllerMessage::DataController(message) => {
                 self.data_controller.call(message);
+            }
+            ControllerMessage::FrameController(message) => {
+                self.frame_controller.call(message);
             }
         }
     }

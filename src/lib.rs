@@ -14,5 +14,8 @@ pub fn run() -> Result<(), JsValue> {
     #[cfg(debug_assertions)]
     console_error_panic_hook::set_once();
 
+    let model = model::Model::new();
+    let _controller = controller::Controller::new(&model);
+
     Ok(())
 }
