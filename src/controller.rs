@@ -19,3 +19,21 @@ impl Controller {
         }
     }
 }
+
+#[cfg(test)]
+mod controller_tests {
+    use super::*;
+    use crate::model::{data::Data, list::List, Model};
+
+    #[test]
+    fn test_controller() {
+        let model = Model::new();
+        let mut controller = Controller::new(&model);
+        controller
+            .data_controller
+            .call(DataControllerMessage::Push(Data::new(
+                0, 1.0, 2.0, 3.0, 4.0, 5.0,
+            )));
+        assert_eq!(model.data_list.borrow().len(), 1);
+    }
+}

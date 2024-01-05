@@ -1,13 +1,14 @@
 pub mod data;
 pub mod list;
 
+use std::{cell::RefCell, rc::Rc};
+
 use data::DataList;
 use list::List;
-use serde::{Deserialize, Serialize};
 
-#[derive(Default, Clone, Debug, Serialize, Deserialize)]
+#[derive(Default, Clone, Debug)]
 pub struct Model {
-    pub data_list: DataList,
+    pub data_list: Rc<RefCell<DataList>>,
     // IndicatorsList
     // ObjectsList
     // OrderList
@@ -17,7 +18,7 @@ pub struct Model {
 impl Model {
     pub fn new() -> Model {
         Model {
-            data_list: DataList::new(),
+            data_list: Rc::new(RefCell::new(DataList::new())),
         }
     }
 }
@@ -28,9 +29,10 @@ mod store_tests {
 
     #[test]
     fn test_data_store() {
-        let mut model = Model::new();
+        let model = Model::new();
         let data = Data::new(0, 1.0, 2.0, 3.0, 4.0, 5.0);
-        model.data_list.push(data);
-        assert_eq!(model.data_list.len(), 1);
+        let mut reference = model.data_list.borrow_mut();
+        reference.push(data);
+        assert_eq!(reference.len(), 1);
     }
 }
