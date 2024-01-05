@@ -1,6 +1,7 @@
 use wasm_bindgen::prelude::*;
 use web_sys::*;
 
+pub mod controller;
 pub mod model;
 pub mod view;
 
