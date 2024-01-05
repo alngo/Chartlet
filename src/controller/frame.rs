@@ -59,10 +59,12 @@ mod frame_controller_tests {
     fn test_frame_controller() {
         let model = Model::new();
         let mut controller = FrameController::new(model.frame.clone());
+        controller.call(FrameControllerMessage::SetAuto(true));
         controller.call(FrameControllerMessage::SetWidth(1.0));
         controller.call(FrameControllerMessage::SetHeight(2.0));
         controller.call(FrameControllerMessage::SetOffsetX(3.0));
         controller.call(FrameControllerMessage::SetOffsetY(4.0));
+        assert_eq!(model.frame.borrow().auto, true);
         assert_eq!(model.frame.borrow().width, 1.0);
         assert_eq!(model.frame.borrow().height, 2.0);
         assert_eq!(model.frame.borrow().offset_x, 3.0);
