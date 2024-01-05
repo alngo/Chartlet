@@ -3,6 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use crate::model::frame::Frame;
 
 pub enum FrameControllerMessage {
+    SetAuto(bool),
     SetWidth(f64),
     SetHeight(f64),
     SetOffsetX(f64),
@@ -20,11 +21,16 @@ impl FrameController {
 
     pub fn call(&mut self, message: FrameControllerMessage) {
         match message {
+            FrameControllerMessage::SetAuto(auto) => self.set_auto(auto),
             FrameControllerMessage::SetWidth(width) => self.set_width(width),
             FrameControllerMessage::SetHeight(height) => self.set_height(height),
             FrameControllerMessage::SetOffsetX(x) => self.set_offset_x(x),
             FrameControllerMessage::SetOffsetY(y) => self.set_offset_y(y),
         }
+    }
+
+    fn set_auto(&mut self, auto: bool) {
+        self.frame.borrow_mut().set_auto(auto);
     }
 
     fn set_width(&mut self, width: f64) {

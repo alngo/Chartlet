@@ -21,7 +21,7 @@ impl Model {
     pub fn new() -> Model {
         Model {
             data_list: Rc::new(RefCell::new(DataList::new())),
-            frame: Rc::new(RefCell::new(Frame::new(0.0, 0.0, 0.0, 0.0))),
+            frame: Rc::new(RefCell::new(Frame::new(false, 0.0, 0.0, 0.0, 0.0))),
         }
     }
 }
@@ -43,10 +43,12 @@ mod store_tests {
     fn test_frame() {
         let model = Model::new();
         let mut reference = model.frame.borrow_mut();
+        reference.set_auto(true);
         reference.set_width(1.0);
         reference.set_height(2.0);
         reference.set_offset_x(3.0);
         reference.set_offset_y(4.0);
+        assert_eq!(reference.auto, true);
         assert_eq!(reference.width, 1.0);
         assert_eq!(reference.height, 2.0);
         assert_eq!(reference.offset_x, 3.0);
