@@ -1,6 +1,7 @@
 use wasm_bindgen::prelude::*;
 use web_sys::*;
 
+pub mod controller;
 pub mod model;
 pub mod view;
 
@@ -12,6 +13,9 @@ static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 pub fn run() -> Result<(), JsValue> {
     #[cfg(debug_assertions)]
     console_error_panic_hook::set_once();
+
+    let model = model::Model::new();
+    let _controller = controller::Controller::new(&model);
 
     Ok(())
 }

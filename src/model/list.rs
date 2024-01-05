@@ -1,4 +1,4 @@
-pub(crate) trait List<T> {
+pub trait List<T> {
     fn new() -> Self;
     fn get(&self, index: usize) -> Option<&T>;
     fn push(&mut self, item: T);
