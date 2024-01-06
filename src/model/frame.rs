@@ -1,3 +1,5 @@
+use super::data::Data;
+
 #[derive(Default, Clone, Debug)]
 pub struct Frame {
     pub auto: bool,
@@ -37,6 +39,19 @@ impl Frame {
     pub fn set_max_y(&mut self, max_y: f64) {
         self.max_y = max_y;
     }
+
+    pub fn auto_frame(&mut self, data: &[Data]) {
+        self.min_y = data[0].low;
+        self.max_y = data[0].high;
+        data.iter().for_each(|d| {
+            if d.low < self.min_y {
+                self.min_y = d.low;
+            }
+            if d.high > self.max_y {
+                self.max_y = d.high;
+            }
+        });
+    }
 }
 
 #[cfg(test)]
@@ -56,5 +71,19 @@ mod frame_tests {
         assert_eq!(frame.min_y, 2.0);
         assert_eq!(frame.max_x, 3.0);
         assert_eq!(frame.max_y, 4.0);
+    }
+
+    #[test]
+    fn test_auto_frame() {
+        let mut frame = Frame::new(true, 0.0, 0.0, 0.0, 0.0);
+        let mut data_list: Vec<Data> = Vec::new();
+        data_list.push(Data::new(1, 1.0, 2.0, 3.0, 4.0, 1.0));
+        data_list.push(Data::new(2, 2.0, 3.0, 4.0, 5.0, 1.0));
+        data_list.push(Data::new(3, 3.0, 4.0, 5.0, 6.0, 1.0));
+        data_list.push(Data::new(4, 4.0, 5.0, 6.0, 7.0, 1.0));
+        data_list.push(Data::new(5, 5.0, 6.0, 7.0, 8.0, 1.0));
+        frame.auto_frame(&data_list);
+        assert_eq!(frame.min_y, 3.0);
+        assert_eq!(frame.max_y, 6.0);
     }
 }

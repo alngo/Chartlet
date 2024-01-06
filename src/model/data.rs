@@ -30,7 +30,7 @@ pub struct DataList {
 }
 
 impl DataList {
-    fn get_slice(&self, from: usize, to: usize) -> &[Data] {
+    pub fn get_slice(&self, from: usize, to: usize) -> &[Data] {
         let to = if to > self.data.len() {
             self.data.len()
         } else {
