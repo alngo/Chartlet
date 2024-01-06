@@ -44,14 +44,14 @@ mod store_tests {
         let model = Model::new();
         let mut reference = model.frame.borrow_mut();
         reference.set_auto(true);
-        reference.set_width(1.0);
-        reference.set_height(2.0);
-        reference.set_offset_x(3.0);
-        reference.set_offset_y(4.0);
+        reference.set_min_x(1.0);
+        reference.set_min_y(2.0);
+        reference.set_max_x(3.0);
+        reference.set_max_y(4.0);
         assert_eq!(reference.auto, true);
-        assert_eq!(reference.width, 1.0);
-        assert_eq!(reference.height, 2.0);
-        assert_eq!(reference.offset_x, 3.0);
-        assert_eq!(reference.offset_y, 4.0);
+        assert_eq!(reference.min_x, 1.0);
+        assert_eq!(reference.min_y, 2.0);
+        assert_eq!(reference.max_x, 3.0);
+        assert_eq!(reference.max_y, 4.0);
     }
 }
