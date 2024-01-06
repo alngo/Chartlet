@@ -1,20 +1,20 @@
 #[derive(Default, Clone, Debug)]
 pub struct Frame {
     pub auto: bool,
-    pub width: f64,
-    pub height: f64,
-    pub offset_x: f64,
-    pub offset_y: f64,
+    pub min_x: f64,
+    pub min_y: f64,
+    pub max_x: f64,
+    pub max_y: f64,
 }
 
 impl Frame {
-    pub fn new(auto: bool, width: f64, height: f64, offset_x: f64, offset_y: f64) -> Frame {
+    pub fn new(auto: bool, min_x: f64, min_y: f64, max_x: f64, max_y: f64) -> Frame {
         Frame {
             auto,
-            width,
-            height,
-            offset_x,
-            offset_y,
+            min_x,
+            min_y,
+            max_x,
+            max_y,
         }
     }
 
@@ -22,20 +22,20 @@ impl Frame {
         self.auto = auto;
     }
 
-    pub fn set_width(&mut self, width: f64) {
-        self.width = width;
+    pub fn set_min_x(&mut self, min_x: f64) {
+        self.min_x = min_x;
     }
 
-    pub fn set_height(&mut self, height: f64) {
-        self.height = height;
+    pub fn set_min_y(&mut self, min_y: f64) {
+        self.min_y = min_y;
     }
 
-    pub fn set_offset_x(&mut self, offset_x: f64) {
-        self.offset_x = offset_x;
+    pub fn set_max_x(&mut self, max_x: f64) {
+        self.max_x = max_x;
     }
 
-    pub fn set_offset_y(&mut self, offset_y: f64) {
-        self.offset_y = offset_y;
+    pub fn set_max_y(&mut self, max_y: f64) {
+        self.max_y = max_y;
     }
 }
 
@@ -47,14 +47,14 @@ mod frame_tests {
     fn test_frame() {
         let mut frame = Frame::new(false, 0.0, 0.0, 0.0, 0.0);
         frame.set_auto(true);
-        frame.set_width(1.0);
-        frame.set_height(2.0);
-        frame.set_offset_x(3.0);
-        frame.set_offset_y(4.0);
+        frame.set_min_x(1.0);
+        frame.set_min_y(2.0);
+        frame.set_max_x(3.0);
+        frame.set_max_y(4.0);
         assert_eq!(frame.auto, true);
-        assert_eq!(frame.width, 1.0);
-        assert_eq!(frame.height, 2.0);
-        assert_eq!(frame.offset_x, 3.0);
-        assert_eq!(frame.offset_y, 4.0);
+        assert_eq!(frame.min_x, 1.0);
+        assert_eq!(frame.min_y, 2.0);
+        assert_eq!(frame.max_x, 3.0);
+        assert_eq!(frame.max_y, 4.0);
     }
 }
