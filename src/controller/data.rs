@@ -9,6 +9,7 @@ pub enum DataControllerMessage {
     Push(Data),
 }
 
+#[derive(Default)]
 pub(crate) struct DataController {
     data_list: Rc<RefCell<DataList>>,
 }

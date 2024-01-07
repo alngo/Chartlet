@@ -11,6 +11,15 @@ impl std::fmt::Display for ViewError {
     }
 }
 
-pub trait View<T> {
-    fn render(&self, model: &model::Model) -> Result<T, ViewError>;
+#[derive(Default)]
+pub struct View;
+
+impl View {
+    pub fn new() -> View {
+        View
+    }
+
+    pub fn render(&self, _model: &model::Model) {}
+    pub fn update(&self, _model: &model::Model) {}
+    pub fn clear(&self) {}
 }

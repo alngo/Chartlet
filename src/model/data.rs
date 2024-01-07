@@ -29,17 +29,6 @@ pub struct DataList {
     data: Vec<Data>,
 }
 
-impl DataList {
-    pub fn get_slice(&self, from: usize, to: usize) -> &[Data] {
-        let to = if to > self.data.len() {
-            self.data.len()
-        } else {
-            to
-        };
-        &self.data[from..to]
-    }
-}
-
 impl List<Data> for DataList {
     fn new() -> DataList {
         DataList { data: Vec::new() }
@@ -49,16 +38,16 @@ impl List<Data> for DataList {
         self.data.get(index)
     }
 
+    fn get_all(&self) -> &[Data] {
+        &self.data
+    }
+
     fn push(&mut self, data: Data) {
         self.data.push(data);
     }
 
     fn len(&self) -> usize {
         self.data.len()
-    }
-
-    fn iter(&self) -> std::slice::Iter<'_, Data> {
-        self.data.iter()
     }
 }
 
@@ -74,18 +63,6 @@ mod data_list_tests {
         assert_eq!(data_list.len(), 2);
         assert_eq!(data_list.get(0).unwrap().timestamp, 1);
         assert_eq!(data_list.get(1).unwrap().timestamp, 2);
-    }
-
-    #[test]
-    fn test_data_slice() {
-        let mut data_list = DataList::new();
-        data_list.push(Data::new(1, 2.0, 3.0, 4.0, 5.0, 6.0));
-        data_list.push(Data::new(2, 3.0, 4.0, 5.0, 6.0, 7.0));
-        data_list.push(Data::new(3, 4.0, 5.0, 6.0, 7.0, 8.0));
-        let slice = data_list.get_slice(1, 3);
-        assert_eq!(slice.len(), 2);
-        assert_eq!(slice[0].timestamp, 2);
-        assert_eq!(slice[1].timestamp, 3);
     }
 }
 
