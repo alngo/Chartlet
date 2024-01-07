@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::model::{frame::Frame, Model};
+use crate::model::{data::Data, frame::Frame};
 
 pub enum FrameControllerMessage {
     SetAuto(bool),
@@ -56,7 +56,12 @@ impl FrameController {
         self.frame.borrow_mut().set_max_y(max_y);
     }
 
-    pub fn update(&self, _model: &Model) {}
+    pub fn update(&self, data: &[Data]) {
+        let mut frame = self.frame.borrow_mut();
+        if frame.auto {
+            frame.auto_frame(data);
+        }
+    }
 }
 
 #[cfg(test)]

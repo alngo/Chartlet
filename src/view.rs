@@ -11,6 +11,7 @@ impl std::fmt::Display for ViewError {
     }
 }
 
+#[derive(Default)]
 pub struct View;
 
 impl View {

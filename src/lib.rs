@@ -1,3 +1,5 @@
+use std::{cell::RefCell, rc::Rc};
+
 use wasm_bindgen::prelude::*;
 use web_sys::*;
 
@@ -14,9 +16,9 @@ pub fn run() -> Result<(), JsValue> {
     #[cfg(debug_assertions)]
     console_error_panic_hook::set_once();
 
-    let model = model::Model::new();
-    let view = view::View::new();
-    let _controller = controller::Controller::new(&model, &view);
+    let model = Rc::new(RefCell::new(model::Model::new()));
+    let view = Rc::new(RefCell::new(view::View::new()));
+    let _controller = controller::Controller::new(model.clone(), view.clone());
 
     Ok(())
 }

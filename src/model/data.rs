@@ -38,16 +38,16 @@ impl List<Data> for DataList {
         self.data.get(index)
     }
 
+    fn get_all(&self) -> &[Data] {
+        &self.data
+    }
+
     fn push(&mut self, data: Data) {
         self.data.push(data);
     }
 
     fn len(&self) -> usize {
         self.data.len()
-    }
-
-    fn iter(&self) -> std::slice::Iter<'_, Data> {
-        self.data.iter()
     }
 }
 
