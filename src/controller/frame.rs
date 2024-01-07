@@ -4,11 +4,11 @@ use crate::model::{frame::Frame, Model};
 
 pub enum FrameControllerMessage {
     SetAuto(bool),
-    SetShift(f64),
-    SetMinX(f64),
+    SetShift(usize),
+    SetMinX(usize),
     SetMinY(f64),
-    SetOffsetX(f64),
-    SetOffsetY(f64),
+    SetMaxX(usize),
+    SetMaxY(f64),
 }
 
 #[derive(Default)]
@@ -27,8 +27,8 @@ impl FrameController {
             FrameControllerMessage::SetShift(shift) => self.set_shift(shift),
             FrameControllerMessage::SetMinX(min_x) => self.set_width(min_x),
             FrameControllerMessage::SetMinY(min_y) => self.set_height(min_y),
-            FrameControllerMessage::SetOffsetX(x) => self.set_max_x(x),
-            FrameControllerMessage::SetOffsetY(y) => self.set_max_y(y),
+            FrameControllerMessage::SetMaxX(max_x) => self.set_max_x(max_x),
+            FrameControllerMessage::SetMaxY(max_y) => self.set_max_y(max_y),
         }
     }
 
@@ -36,11 +36,11 @@ impl FrameController {
         self.frame.borrow_mut().set_auto(auto);
     }
 
-    fn set_shift(&mut self, shift: f64) {
+    fn set_shift(&mut self, shift: usize) {
         self.frame.borrow_mut().set_shift(shift);
     }
 
-    fn set_width(&mut self, min_x: f64) {
+    fn set_width(&mut self, min_x: usize) {
         self.frame.borrow_mut().set_min_x(min_x);
     }
 
@@ -48,12 +48,12 @@ impl FrameController {
         self.frame.borrow_mut().set_min_y(min_y);
     }
 
-    fn set_max_x(&mut self, x: f64) {
-        self.frame.borrow_mut().set_max_x(x);
+    fn set_max_x(&mut self, max_x: usize) {
+        self.frame.borrow_mut().set_max_x(max_x);
     }
 
-    fn set_max_y(&mut self, y: f64) {
-        self.frame.borrow_mut().set_max_y(y);
+    fn set_max_y(&mut self, max_y: f64) {
+        self.frame.borrow_mut().set_max_y(max_y);
     }
 
     pub fn update(&self, _model: &Model) {}
@@ -69,16 +69,16 @@ mod frame_controller_tests {
         let model = Model::new();
         let mut controller = FrameController::new(model.frame.clone());
         controller.call(FrameControllerMessage::SetAuto(true));
-        controller.call(FrameControllerMessage::SetShift(5.0));
-        controller.call(FrameControllerMessage::SetMinX(1.0));
+        controller.call(FrameControllerMessage::SetShift(5));
+        controller.call(FrameControllerMessage::SetMinX(1));
         controller.call(FrameControllerMessage::SetMinY(2.0));
-        controller.call(FrameControllerMessage::SetOffsetX(3.0));
-        controller.call(FrameControllerMessage::SetOffsetY(4.0));
+        controller.call(FrameControllerMessage::SetMaxX(3));
+        controller.call(FrameControllerMessage::SetMaxY(4.0));
         assert_eq!(model.frame.borrow().auto, true);
-        assert_eq!(model.frame.borrow().shift, 5.0);
-        assert_eq!(model.frame.borrow().min_x, 1.0);
+        assert_eq!(model.frame.borrow().shift, 5);
+        assert_eq!(model.frame.borrow().min_x, 1);
         assert_eq!(model.frame.borrow().min_y, 2.0);
-        assert_eq!(model.frame.borrow().max_x, 3.0);
+        assert_eq!(model.frame.borrow().max_x, 3);
         assert_eq!(model.frame.borrow().max_y, 4.0);
     }
 }
