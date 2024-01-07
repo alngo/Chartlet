@@ -15,7 +15,8 @@ pub fn run() -> Result<(), JsValue> {
     console_error_panic_hook::set_once();
 
     let model = model::Model::new();
-    let _controller = controller::Controller::new(&model);
+    let view = view::View::new();
+    let _controller = controller::Controller::new(&model, &view);
 
     Ok(())
 }

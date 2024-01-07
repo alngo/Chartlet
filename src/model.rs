@@ -21,7 +21,7 @@ impl Model {
     pub fn new() -> Model {
         Model {
             data_list: Rc::new(RefCell::new(DataList::new())),
-            frame: Rc::new(RefCell::new(Frame::new(false, 0.0, 0.0, 0.0, 0.0))),
+            frame: Rc::new(RefCell::new(Frame::new(false, 0.0, 0.0, 0.0, 0.0, 0.0))),
         }
     }
 }

@@ -4,20 +4,21 @@ mod frame;
 use data::{DataController, DataControllerMessage};
 use frame::{FrameController, FrameControllerMessage};
 
-use crate::model::Model;
+use crate::{model::Model, view::View};
 
 pub enum ControllerMessage {
     DataController(DataControllerMessage),
     FrameController(FrameControllerMessage),
 }
 
+#[derive(Default)]
 pub struct Controller {
     data_controller: DataController,
     frame_controller: FrameController,
 }
 
 impl Controller {
-    pub fn new(model: &Model) -> Controller {
+    pub fn new(model: &Model, view: &View) -> Controller {
         Controller {
             data_controller: DataController::new(model.data_list.clone()),
             frame_controller: FrameController::new(model.frame.clone()),
@@ -44,7 +45,8 @@ mod controller_tests {
     #[test]
     fn test_controller() {
         let model = Model::new();
-        let mut controller = Controller::new(&model);
+        let view = View::new();
+        let mut controller = Controller::new(&model, &view);
         let message = ControllerMessage::DataController(DataControllerMessage::Push(Data::new(
             0, 1.0, 2.0, 3.0, 4.0, 5.0,
         )));
