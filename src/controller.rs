@@ -1,7 +1,7 @@
 mod data;
 mod frame;
 
-use std::rc::Rc;
+use std::{cell::RefCell, rc::Rc};
 
 use data::{DataController, DataControllerMessage};
 use frame::{FrameController, FrameControllerMessage};
@@ -19,13 +19,13 @@ pub enum ControllerMessage {
 #[derive(Default)]
 pub struct Controller {
     model: Rc<Model>,
-    view: Rc<View>,
+    view: Rc<RefCell<View>>,
     data_controller: DataController,
     frame_controller: FrameController,
 }
 
 impl Controller {
-    pub fn new(model: Rc<Model>, view: Rc<View>) -> Controller {
+    pub fn new(model: Rc<Model>, view: Rc<RefCell<View>>) -> Controller {
         Controller {
             model: model.clone(),
             view: view.clone(),
@@ -46,10 +46,10 @@ impl Controller {
         self.update();
     }
 
-    fn update(&self) {
+    fn update(&mut self) {
         let data_list = self.model.data_list.borrow();
         self.frame_controller.update(data_list.get_all());
-        self.view.update(&self.model)
+        self.view.borrow_mut().update(&self.model)
     }
 }
 
@@ -61,7 +61,7 @@ mod controller_tests {
     #[test]
     fn test_controller() {
         let model = Rc::new(Model::new());
-        let view = Rc::new(View::new());
+        let view = Rc::new(RefCell::new(View::new()));
         let mut controller = Controller::new(model.clone(), view.clone());
         let message = ControllerMessage::DataController(DataControllerMessage::Push(Data::new(
             0, 1.0, 2.0, 3.0, 4.0, 5.0,
@@ -86,7 +86,7 @@ mod controller_tests {
             data_list.push(Data::new(0, 1.0, 5.0, 2.0, 4.0, 5.0));
             data_list.push(Data::new(0, 1.0, 6.0, 3.0, 4.0, 5.0));
         }
-        let view = Rc::new(View::new());
+        let view = Rc::new(RefCell::new(View::new()));
         let mut controller = Controller::new(model.clone(), view.clone());
         let message = ControllerMessage::DataController(DataControllerMessage::Push(Data::new(
             0, 1.0, 7.0, 4.0, 4.0, 5.0,

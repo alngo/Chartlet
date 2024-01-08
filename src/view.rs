@@ -1,6 +1,10 @@
+use std::collections::HashMap;
+
 use crate::model;
 
-mod json;
+mod builder;
+
+use builder::Builder;
 
 #[derive(Debug, Clone)]
 pub struct ViewError;
@@ -11,15 +15,40 @@ impl std::fmt::Display for ViewError {
     }
 }
 
+#[derive(Hash, PartialEq, Eq)]
+pub enum Layer {
+    Grid,
+    Label,
+    Data,
+    Indicators,
+    Objects,
+    Orders,
+}
+
 #[derive(Default)]
-pub struct View;
+pub struct View {
+    builder: Option<Builder>,
+    layers: HashMap<Layer, Option<String>>,
+}
 
 impl View {
     pub fn new() -> View {
-        View
+        View {
+            builder: None,
+            layers: HashMap::new(),
+        }
     }
 
-    pub fn render(&self, _model: &model::Model) {}
-    pub fn update(&self, model: &model::Model) {}
+    pub fn update(&mut self, model: &model::Model) {
+        self.clear();
+        self.render(model);
+    }
+
+    pub fn render(&mut self, model: &model::Model) {
+        self.layers
+            .insert(Layer::Grid, self.builder.build_grid().ok());
+        //
+    }
+
     pub fn clear(&self) {}
 }
