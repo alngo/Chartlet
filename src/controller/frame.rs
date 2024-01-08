@@ -3,6 +3,12 @@ use std::{cell::RefCell, rc::Rc};
 use crate::model::{data::Data, frame::Frame};
 
 pub enum FrameControllerMessage {
+   // VerticalZoomIn
+   // VerticalZoomOut,
+   // Move to most recent data
+   // Move to oldest data
+   // AutoAdjust
+   // Move automatically to most recent data
     SetAuto(bool),
     SetShift(usize),
     SetMinX(usize),
