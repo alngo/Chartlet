@@ -54,10 +54,8 @@ impl Frame {
     }
 
     pub fn auto_frame(&mut self, data: &[Data]) {
-        if self.auto {
-            self.auto_frame_x(data);
-            self.auto_frame_y(data);
-        }
+        self.auto_frame_x(data);
+        self.auto_frame_y(data);
     }
 
     fn auto_frame_y(&mut self, data: &[Data]) {

@@ -20,6 +20,6 @@ impl View {
     }
 
     pub fn render(&self, _model: &model::Model) {}
-    pub fn update(&self, _model: &model::Model) {}
+    pub fn update(&self, model: &model::Model) {}
     pub fn clear(&self) {}
 }
