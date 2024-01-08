@@ -1,23 +1,17 @@
-pub struct BuilderError;
-
-impl std::fmt::Display for BuilderError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "BuilderError")
-    }
-}
-
+#[derive(Default)]
 pub struct Builder {
-    width: u64,
-    height: u64,
+    width: usize,
+    height: usize,
 }
 
 impl Builder {
-    pub fn new(width: u64, height: u64) -> Builder {
+    pub fn new(width: usize, height: usize) -> Builder {
         Builder { width, height }
     }
 
-    pub fn build_grid(&self) -> Result<String, BuilderError> {
-        todo!()
+    pub fn build_grid(&self, data: &[Data], min_y: f64, max_y: f64) -> String {
+        // x Every hours
+        // y Every round number 0.0050
     }
 
     // fn build_label(&self) -> Result<String, BuilderError> {

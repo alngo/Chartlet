@@ -27,14 +27,12 @@ pub enum Layer {
 
 #[derive(Default)]
 pub struct View {
-    builder: Option<Builder>,
-    layers: HashMap<Layer, Option<String>>,
+    layers: HashMap<Layer, String>,
 }
 
 impl View {
     pub fn new() -> View {
         View {
-            builder: None,
             layers: HashMap::new(),
         }
     }
@@ -45,9 +43,10 @@ impl View {
     }
 
     pub fn render(&mut self, model: &model::Model) {
-        self.layers
-            .insert(Layer::Grid, self.builder.build_grid().ok());
-        //
+        // get width and height from model
+        let builder = Builder::new(100, 100);
+        let grid = builder.build_grid();
+        self.layers.insert(Layer::Grid, grid);
     }
 
     pub fn clear(&self) {}
