@@ -45,8 +45,8 @@ impl View {
     pub fn render(&mut self, model: &model::Model) {
         // get width and height from model
         let builder = Builder::new(100, 100);
-        let grid = builder.build_grid();
-        self.layers.insert(Layer::Grid, grid);
+        // let grid = builder.build_grid();
+        // self.layers.insert(Layer::Grid, grid);
     }
 
     pub fn clear(&self) {}

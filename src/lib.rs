@@ -18,7 +18,7 @@ pub fn run() -> Result<(), JsValue> {
 
     let model = Rc::new(model::Model::new());
     let view = Rc::new(RefCell::new(view::View::new()));
-    let _controller = controller::Controller::new(model.clone(), view.clone());
+    let _controller = controller::Controller::new(model, view.clone());
 
     Ok(())
 }

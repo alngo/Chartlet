@@ -1,3 +1,5 @@
+use crate::model::data::Data;
+
 #[derive(Default)]
 pub struct Builder {
     width: usize,
@@ -9,7 +11,7 @@ impl Builder {
         Builder { width, height }
     }
 
-    pub fn build_grid(&self, data: &[Data], min_y: f64, max_y: f64) -> String {
+    pub fn build_grid(&self, data: &[Data], min_y: f64, max_y: f64) {
         // x Every hours
         // y Every round number 0.0050
     }

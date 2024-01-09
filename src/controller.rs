@@ -47,9 +47,7 @@ impl Controller {
     }
 
     fn update(&mut self) {
-        let data_list = self.model.data_list.borrow();
-        self.frame_controller.update(data_list.get_all());
-        self.view.borrow_mut().update(&self.model)
+        self.view.borrow_mut().update(&self.model);
     }
 }
 
@@ -71,33 +69,21 @@ mod controller_tests {
     }
 
     #[test]
-    fn test_update() {
+    fn test_call_frame_controller() {
         let model = Rc::new(Model::new());
-        {
-            let mut data_list = model.data_list.borrow_mut();
-            let mut frame = model.frame.borrow_mut();
-            frame.set_auto(true);
-            frame.set_shift(1);
-            frame.set_min_x(0);
-            frame.set_min_y(2.0);
-            frame.set_max_x(3);
-            frame.set_max_y(4.0);
-            data_list.push(Data::new(0, 1.0, 4.0, 1.0, 4.0, 5.0));
-            data_list.push(Data::new(0, 1.0, 5.0, 2.0, 4.0, 5.0));
-            data_list.push(Data::new(0, 1.0, 6.0, 3.0, 4.0, 5.0));
-        }
         let view = Rc::new(RefCell::new(View::new()));
         let mut controller = Controller::new(model.clone(), view.clone());
-        let message = ControllerMessage::DataController(DataControllerMessage::Push(Data::new(
-            0, 1.0, 7.0, 4.0, 4.0, 5.0,
-        )));
+
+        let message = ControllerMessage::FrameController(FrameControllerMessage::SetShift(1));
         controller.call(message);
-        assert_eq!(model.data_list.borrow().len(), 4);
-        assert_eq!(model.frame.borrow().auto, true);
         assert_eq!(model.frame.borrow().shift, 1);
-        assert_eq!(model.frame.borrow().min_x, 2);
-        assert_eq!(model.frame.borrow().min_y, 3.0);
-        assert_eq!(model.frame.borrow().max_x, 5);
-        assert_eq!(model.frame.borrow().max_y, 7.0);
+
+        let message = ControllerMessage::FrameController(FrameControllerMessage::AutoMoveX(true));
+        controller.call(message);
+        assert_eq!(model.frame.borrow().auto_move_x, true);
+
+        let message = ControllerMessage::FrameController(FrameControllerMessage::AutoAdjustY(true));
+        controller.call(message);
+        assert_eq!(model.frame.borrow().auto_adjust_y, true);
     }
 }
