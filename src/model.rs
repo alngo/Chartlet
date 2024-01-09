@@ -1,17 +1,20 @@
 pub mod data;
 pub mod frame;
 pub mod list;
+pub mod viewport;
 
 use std::{cell::RefCell, rc::Rc};
 
 use data::DataList;
 use frame::Frame;
 use list::List;
+use viewport::Viewport;
 
 #[derive(Default, Clone, Debug)]
 pub struct Model {
-    pub data_list: Rc<RefCell<DataList>>,
     pub frame: Rc<RefCell<Frame>>,
+    pub viewport: Rc<RefCell<Viewport>>,
+    pub data_list: Rc<RefCell<DataList>>,
     // IndicatorsList
     // ObjectsList
     // OrderList
@@ -20,8 +23,9 @@ pub struct Model {
 impl Model {
     pub fn new() -> Model {
         Model {
-            data_list: Rc::new(RefCell::new(DataList::new())),
             frame: Rc::new(RefCell::new(Frame::default())),
+            viewport: Rc::new(RefCell::new(Viewport::default())),
+            data_list: Rc::new(RefCell::new(DataList::new())),
         }
     }
 }

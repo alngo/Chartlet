@@ -1,53 +1,59 @@
 mod data;
 mod frame;
-
-use std::{cell::RefCell, rc::Rc};
+mod viewport;
 
 use data::{DataController, DataControllerMessage};
 use frame::{FrameController, FrameControllerMessage};
+use viewport::{ViewportController, ViewportControllerMessage};
 
-use crate::{
-    model::{list::List, Model},
-    view::View,
-};
+use crate::{model::Model, view::View};
 
 pub enum ControllerMessage {
     DataController(DataControllerMessage),
     FrameController(FrameControllerMessage),
+    ViewportController(ViewportControllerMessage),
 }
 
 #[derive(Default)]
 pub struct Controller {
-    model: Rc<Model>,
-    view: Rc<RefCell<View>>,
-    data_controller: DataController,
+    model: Model,
+    view: View,
     frame_controller: FrameController,
+    viewport_controller: ViewportController,
+    data_controller: DataController,
 }
 
 impl Controller {
-    pub fn new(model: Rc<Model>, view: Rc<RefCell<View>>) -> Controller {
+    pub fn new(model: Model, view: View) -> Controller {
+        let data_controller = DataController::new(model.data_list.clone());
+        let frame_controller = FrameController::new(model.frame.clone());
+        let viewport_controller = ViewportController::new(model.viewport.clone());
         Controller {
-            model: model.clone(),
-            view: view.clone(),
-            data_controller: DataController::new(model.data_list.clone()),
-            frame_controller: FrameController::new(model.frame.clone()),
+            model,
+            view,
+            data_controller,
+            frame_controller,
+            viewport_controller,
         }
     }
 
     pub fn call(&mut self, message: ControllerMessage) {
         match message {
-            ControllerMessage::DataController(message) => {
-                self.data_controller.call(message);
-            }
             ControllerMessage::FrameController(message) => {
                 self.frame_controller.call(message);
+            }
+            ControllerMessage::ViewportController(message) => {
+                self.viewport_controller.call(message);
+            }
+            ControllerMessage::DataController(message) => {
+                self.data_controller.call(message);
             }
         }
         self.update();
     }
 
-    fn update(&mut self) {
-        self.view.borrow_mut().update(&self.model);
+    fn update(&self) {
+        self.view.update(&self.model);
     }
 }
 
@@ -58,32 +64,53 @@ mod controller_tests {
 
     #[test]
     fn test_controller() {
-        let model = Rc::new(Model::new());
-        let view = Rc::new(RefCell::new(View::new()));
-        let mut controller = Controller::new(model.clone(), view.clone());
+        let model = Model::new();
+        let view = View::new();
+        let mut controller = Controller::new(model, view);
         let message = ControllerMessage::DataController(DataControllerMessage::Push(Data::new(
             0, 1.0, 2.0, 3.0, 4.0, 5.0,
         )));
         controller.call(message);
-        assert_eq!(model.data_list.borrow().len(), 1);
+        assert_eq!(controller.model.data_list.borrow().len(), 1);
     }
 
     #[test]
     fn test_call_frame_controller() {
-        let model = Rc::new(Model::new());
-        let view = Rc::new(RefCell::new(View::new()));
-        let mut controller = Controller::new(model.clone(), view.clone());
+        let model = Model::new();
+        let view = View::new();
+        let mut controller = Controller::new(model, view);
 
-        let message = ControllerMessage::FrameController(FrameControllerMessage::SetShift(1));
-        controller.call(message);
-        assert_eq!(model.frame.borrow().shift, 1);
+        let messages = vec![
+            ControllerMessage::FrameController(FrameControllerMessage::SetShift(1)),
+            ControllerMessage::FrameController(FrameControllerMessage::AutoMoveX(true)),
+            ControllerMessage::FrameController(FrameControllerMessage::AutoAdjustY(true)),
+        ];
 
-        let message = ControllerMessage::FrameController(FrameControllerMessage::AutoMoveX(true));
-        controller.call(message);
-        assert_eq!(model.frame.borrow().auto_move_x, true);
+        for message in messages {
+            controller.call(message);
+        }
 
-        let message = ControllerMessage::FrameController(FrameControllerMessage::AutoAdjustY(true));
-        controller.call(message);
-        assert_eq!(model.frame.borrow().auto_adjust_y, true);
+        assert_eq!(controller.model.frame.borrow().shift, 1);
+        assert_eq!(controller.model.frame.borrow().auto_move_x, true);
+        assert_eq!(controller.model.frame.borrow().auto_adjust_y, true);
+    }
+
+    #[test]
+    fn test_call_viewport_controller() {
+        let model = Model::new();
+        let view = View::new();
+        let mut controller = Controller::new(model, view);
+
+        let messages = vec![
+            ControllerMessage::ViewportController(ViewportControllerMessage::SetWidth(1)),
+            ControllerMessage::ViewportController(ViewportControllerMessage::SetHeight(2)),
+        ];
+
+        for message in messages {
+            controller.call(message);
+        }
+
+        assert_eq!(controller.model.viewport.borrow().width, 1);
+        assert_eq!(controller.model.viewport.borrow().height, 2);
     }
 }

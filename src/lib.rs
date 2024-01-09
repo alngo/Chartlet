@@ -16,9 +16,9 @@ pub fn run() -> Result<(), JsValue> {
     #[cfg(debug_assertions)]
     console_error_panic_hook::set_once();
 
-    let model = Rc::new(model::Model::new());
-    let view = Rc::new(RefCell::new(view::View::new()));
-    let _controller = controller::Controller::new(model, view.clone());
+    let model = model::Model::new();
+    let view = view::View::new();
+    let controller = controller::Controller::new(model, view);
 
     Ok(())
 }

@@ -37,14 +37,13 @@ impl View {
         }
     }
 
-    pub fn update(&mut self, model: &model::Model) {
+    pub fn update(&self, model: &model::Model) {
         self.clear();
-        self.render(model);
     }
 
     pub fn render(&mut self, model: &model::Model) {
         // get width and height from model
-        let builder = Builder::new(100, 100);
+        // let builder = Builder::new(100, 100);
         // let grid = builder.build_grid();
         // self.layers.insert(Layer::Grid, grid);
     }
