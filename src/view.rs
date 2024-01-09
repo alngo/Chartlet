@@ -1,7 +1,5 @@
 use crate::model;
 
-mod json;
-
 #[derive(Debug, Clone)]
 pub struct ViewError;
 
@@ -11,15 +9,29 @@ impl std::fmt::Display for ViewError {
     }
 }
 
+#[derive(Hash, PartialEq, Eq)]
+pub enum Layer {
+    Grid,
+    Label,
+    Data,
+    Indicators,
+    Objects,
+    Orders,
+}
+
 #[derive(Default)]
-pub struct View;
+pub struct View {}
 
 impl View {
     pub fn new() -> View {
-        View
+        View {}
     }
 
-    pub fn render(&self, _model: &model::Model) {}
-    pub fn update(&self, _model: &model::Model) {}
-    pub fn clear(&self) {}
+    pub fn update(&mut self, model: &model::Model) {
+        self.clear();
+        self.render(model);
+    }
+
+    pub fn clear(&mut self) {}
+    pub fn render(&mut self, _model: &model::Model) {}
 }

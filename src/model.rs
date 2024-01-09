@@ -1,17 +1,20 @@
 pub mod data;
 pub mod frame;
 pub mod list;
+pub mod viewport;
 
 use std::{cell::RefCell, rc::Rc};
 
 use data::DataList;
 use frame::Frame;
 use list::List;
+use viewport::Viewport;
 
 #[derive(Default, Clone, Debug)]
 pub struct Model {
-    pub data_list: Rc<RefCell<DataList>>,
     pub frame: Rc<RefCell<Frame>>,
+    pub viewport: Rc<RefCell<Viewport>>,
+    pub data_list: Rc<RefCell<DataList>>,
     // IndicatorsList
     // ObjectsList
     // OrderList
@@ -20,8 +23,9 @@ pub struct Model {
 impl Model {
     pub fn new() -> Model {
         Model {
+            frame: Rc::new(RefCell::new(Frame::default())),
+            viewport: Rc::new(RefCell::new(Viewport::default())),
             data_list: Rc::new(RefCell::new(DataList::new())),
-            frame: Rc::new(RefCell::new(Frame::new(false, 0, 0, 0.0, 0, 0.0))),
         }
     }
 }
@@ -37,21 +41,5 @@ mod store_tests {
         let mut reference = model.data_list.borrow_mut();
         reference.push(data);
         assert_eq!(reference.len(), 1);
-    }
-
-    #[test]
-    fn test_frame() {
-        let model = Model::new();
-        let mut reference = model.frame.borrow_mut();
-        reference.set_auto(true);
-        reference.set_min_x(1);
-        reference.set_min_y(2.0);
-        reference.set_max_x(3);
-        reference.set_max_y(4.0);
-        assert_eq!(reference.auto, true);
-        assert_eq!(reference.min_x, 1);
-        assert_eq!(reference.min_y, 2.0);
-        assert_eq!(reference.max_x, 3);
-        assert_eq!(reference.max_y, 4.0);
     }
 }
