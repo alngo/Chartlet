@@ -1,13 +1,9 @@
+use std::collections::HashMap;
+
 use crate::model;
 
-#[derive(Debug, Clone)]
-pub struct ViewError;
-
-impl std::fmt::Display for ViewError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "ViewError")
-    }
-}
+mod composite;
+mod context;
 
 #[derive(Hash, PartialEq, Eq)]
 pub enum Layer {
@@ -19,12 +15,18 @@ pub enum Layer {
     Orders,
 }
 
+pub struct Point(pub f64, pub f64);
+
 #[derive(Default)]
-pub struct View {}
+pub struct View {
+    layers: HashMap<Layer, Box<dyn composite::Draw>>,
+}
 
 impl View {
     pub fn new() -> View {
-        View {}
+        View {
+            layers: HashMap::new(),
+        }
     }
 
     pub fn update(&mut self, model: &model::Model) {
@@ -32,6 +34,12 @@ impl View {
         self.render(model);
     }
 
-    pub fn clear(&mut self) {}
-    pub fn render(&mut self, _model: &model::Model) {}
+    pub fn clear(&mut self) {
+        self.layers.clear();
+    }
+
+    pub fn render(&mut self, model: &model::Model) {
+        let width = model.viewport.borrow().width;
+        let height = model.viewport.borrow().height;
+    }
 }
