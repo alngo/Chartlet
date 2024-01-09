@@ -4,7 +4,9 @@ mod viewport;
 
 use data::{DataController, DataControllerMessage};
 use frame::{FrameController, FrameControllerMessage};
-use viewport::{ViewportController, ViewportControllerMessage};
+use viewport::ViewportController;
+
+pub use viewport::ViewportControllerMessage;
 
 use crate::{model::Model, view::View};
 
@@ -52,7 +54,7 @@ impl Controller {
         self.update();
     }
 
-    fn update(&self) {
+    fn update(&mut self) {
         self.view.update(&self.model);
     }
 }

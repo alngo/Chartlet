@@ -1,5 +1,3 @@
-use std::{cell::RefCell, rc::Rc};
-
 use wasm_bindgen::prelude::*;
 use web_sys::*;
 
@@ -18,7 +16,22 @@ pub fn run() -> Result<(), JsValue> {
 
     let model = model::Model::new();
     let view = view::View::new();
-    let controller = controller::Controller::new(model, view);
+    let _controller = {
+        let mut controller = controller::Controller::new(model, view);
+        let messages = vec![
+            controller::ControllerMessage::ViewportController(
+                controller::ViewportControllerMessage::SetWidth(100),
+            ),
+            controller::ControllerMessage::ViewportController(
+                controller::ViewportControllerMessage::SetHeight(100),
+            ),
+        ];
+
+        for message in messages {
+            controller.call(message);
+        }
+        controller
+    };
 
     Ok(())
 }

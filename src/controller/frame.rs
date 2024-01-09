@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::model::{data::Data, frame::Frame};
+use crate::model::frame::Frame;
 
 pub enum FrameControllerMessage {
     AutoAdjustY(bool),
