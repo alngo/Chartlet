@@ -2,6 +2,7 @@ use std::collections::HashMap;
 
 use crate::model;
 
+mod builder;
 mod composite;
 mod context;
 
@@ -15,11 +16,14 @@ pub enum Layer {
     Orders,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
 pub struct Point(pub f64, pub f64);
+
+pub type Drawables = Vec<Box<dyn composite::Drawable>>;
 
 #[derive(Default)]
 pub struct View {
-    layers: HashMap<Layer, Box<dyn composite::Draw>>,
+    layers: HashMap<Layer, Drawables>,
 }
 
 impl View {
@@ -41,5 +45,12 @@ impl View {
     pub fn render(&mut self, model: &model::Model) {
         let width = model.viewport.borrow().width;
         let height = model.viewport.borrow().height;
+
+        let min_x = model.frame.borrow().min_x;
+        let max_x = model.frame.borrow().max_x;
+
+        let builder = builder::Builder::new(width, height);
+        let grid = builder.build_grid(min_x, max_x);
+        self.layers.insert(Layer::Grid, grid);
     }
 }

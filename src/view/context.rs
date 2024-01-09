@@ -4,7 +4,7 @@ use super::Point;
 
 pub trait Context {
     fn draw_pixel(&self, point: Point, color: &str) -> Result<(), JsValue>;
-    fn draw_line(&self, start: Point, end: Point, color: &str) -> Result<(), JsValue>;
+    fn draw_line(&self, start: Point, end: Point);
     fn draw_rect(
         &self,
         start: Point,
