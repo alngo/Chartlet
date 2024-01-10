@@ -1,13 +1,11 @@
+mod builder;
+mod composite;
+mod context;
+mod converter;
+
 use crate::model;
-
-#[derive(Debug, Clone)]
-pub struct ViewError;
-
-impl std::fmt::Display for ViewError {
-    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
-        write!(f, "ViewError")
-    }
-}
+use converter::Converter;
+use std::collections::HashMap;
 
 #[derive(Hash, PartialEq, Eq)]
 pub enum Layer {
@@ -19,12 +17,21 @@ pub enum Layer {
     Orders,
 }
 
+#[derive(Debug, Copy, Clone, PartialEq)]
+pub struct Point(pub f64, pub f64);
+
+pub type Drawables = Vec<Box<dyn composite::Drawable>>;
+
 #[derive(Default)]
-pub struct View {}
+pub struct View {
+    layers: HashMap<Layer, Drawables>,
+}
 
 impl View {
     pub fn new() -> View {
-        View {}
+        View {
+            layers: HashMap::new(),
+        }
     }
 
     pub fn update(&mut self, model: &model::Model) {
@@ -32,6 +39,22 @@ impl View {
         self.render(model);
     }
 
-    pub fn clear(&mut self) {}
-    pub fn render(&mut self, _model: &model::Model) {}
+    pub fn clear(&mut self) {
+        self.layers.clear();
+    }
+
+    pub fn render(&mut self, model: &model::Model) {
+        let width = model.viewport.borrow().width;
+        let height = model.viewport.borrow().height;
+        let min_x = model.frame.borrow().min_x;
+        let max_x = model.frame.borrow().max_x;
+        let min_y = model.frame.borrow().min_y;
+        let max_y = model.frame.borrow().max_y;
+
+        let converter = Converter::new(width, height, min_x, min_y, max_x, max_y);
+
+        let builder = builder::Builder::new(converter);
+        let grid = builder.build_grid(min_x, max_x, min_y, max_y);
+        self.layers.insert(Layer::Grid, grid);
+    }
 }

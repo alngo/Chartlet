@@ -16,6 +16,7 @@ pub fn run() -> Result<(), JsValue> {
 
     let model = model::Model::new();
     let view = view::View::new();
+
     let _controller = {
         let mut controller = controller::Controller::new(model, view);
         let messages = vec![
