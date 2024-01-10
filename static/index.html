@@ -4,7 +4,30 @@
     <meta charset="UTF-8">
     <title>Chartlet</title>
   </head>
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+    #App {
+        display: flex;
+        justify-content: center;
+        justify-items: center;
+        align-items: center;
+        width: 100vw;
+        height: 100vh;
+    }
+    #chartlet {
+        width: 90%;
+        height: 90%;
+        display: flex;
+        background-color: #152125;
+    }
+  </style>
   <body>
+    <div id="App">
+      <div id="chartlet"></div>
+    </div>
     <script src="index.js"></script>
   </body>
 </html>
