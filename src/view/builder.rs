@@ -1,28 +1,32 @@
 use super::composite::*;
+use super::converter::Converter;
 use super::Drawables;
+use super::Point;
 
 pub struct Builder {
-    width: usize,
-    height: usize,
+    converter: Converter,
 }
 
 impl Builder {
-    pub fn new(width: usize, height: usize) -> Builder {
-        Builder { width, height }
+    pub fn new(converter: Converter) -> Builder {
+        Builder { converter }
     }
 
-    pub fn build_grid(&self, min_x: usize, max_x: usize) -> Drawables {
+    pub fn build_grid(&self, min_x: usize, max_x: usize, min_y: f64, max_y: f64) -> Drawables {
+        // Could be better, todo: get rid of magic numbers
+        // They should be configurable
         let mut drawables = Drawables::new();
+        // Every 30 candles, draw a vertical line
         for x in min_x..=max_x {
-            // Every 20 candles, draw a vertical line...
-            // Could be better, todo: get rid of this magic number
-            if x % 20 == 0 {
+            if x % 30 == 0 {
                 drawables.push(Box::new(line::Line::new(
-                    super::Point(x as f64, 0.0),
-                    super::Point(x as f64, self.height as f64),
+                    self.converter.frame_to_viewport(Point(x as f64, 0.0)),
+                    self.converter.frame_to_viewport(Point(x as f64, max_y)),
                 )));
             }
         }
+
+        // Every 50 pips, draw a horizontal line
         drawables
     }
 }

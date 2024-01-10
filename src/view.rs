@@ -1,10 +1,11 @@
-use std::collections::HashMap;
-
-use crate::model;
-
 mod builder;
 mod composite;
 mod context;
+mod converter;
+
+use crate::model;
+use converter::Converter;
+use std::collections::HashMap;
 
 #[derive(Hash, PartialEq, Eq)]
 pub enum Layer {
@@ -45,12 +46,15 @@ impl View {
     pub fn render(&mut self, model: &model::Model) {
         let width = model.viewport.borrow().width;
         let height = model.viewport.borrow().height;
-
         let min_x = model.frame.borrow().min_x;
         let max_x = model.frame.borrow().max_x;
+        let min_y = model.frame.borrow().min_y;
+        let max_y = model.frame.borrow().max_y;
 
-        let builder = builder::Builder::new(width, height);
-        let grid = builder.build_grid(min_x, max_x);
+        let converter = Converter::new(width, height, min_x, min_y, max_x, max_y);
+
+        let builder = builder::Builder::new(converter);
+        let grid = builder.build_grid(min_x, max_x, min_y, max_y);
         self.layers.insert(Layer::Grid, grid);
     }
 }
