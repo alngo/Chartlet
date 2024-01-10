@@ -51,7 +51,6 @@ impl Chartlet {
             }
             controller
         };
-
         Ok(())
     }
 }
