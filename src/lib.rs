@@ -1,3 +1,5 @@
+use rust_decimal::Decimal;
+use rust_decimal_macros::dec;
 use wasm_bindgen::prelude::*;
 use web_sys::*;
 

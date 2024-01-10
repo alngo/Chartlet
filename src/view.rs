@@ -50,9 +50,7 @@ impl View {
         let max_x = model.frame.borrow().max_x;
         let min_y = model.frame.borrow().min_y;
         let max_y = model.frame.borrow().max_y;
-
         let converter = Converter::new(width, height, min_x, min_y, max_x, max_y);
-
         let builder = builder::Builder::new(converter);
         let grid = builder.build_grid(min_x, max_x, min_y, max_y);
         self.layers.insert(Layer::Grid, grid);

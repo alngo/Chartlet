@@ -32,6 +32,8 @@ serde_json = "1.0"
 # compared to the default allocator's ~10K. However, it is slower than the default
 # allocator, so it's not enabled by default.
 wee_alloc = { version = "0.4.2", optional = true }
+rust_decimal = "1.33.1"
+rust_decimal_macros = "1.33.1"
 
 # The `web-sys` crate allows you to interact with the various browser APIs,
 # like the DOM.
