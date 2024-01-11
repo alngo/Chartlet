@@ -15,6 +15,7 @@ pub enum Layer {
     Indicators,
     Objects,
     Orders,
+    Pointer,
 }
 
 #[derive(Debug, Copy, Clone, PartialEq)]
