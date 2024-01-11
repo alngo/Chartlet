@@ -28,7 +28,7 @@ pub struct Controller {
 impl Controller {
     pub fn new(model: Model, view: View) -> Controller {
         let data_controller = DataController::new(model.data_list.clone());
-        let frame_controller = FrameController::new(model.frame.clone());
+        let frame_controller = FrameController::default();
         let viewport_controller = ViewportController::new(model.viewport.clone());
         Controller {
             model,
@@ -42,7 +42,7 @@ impl Controller {
     pub fn call(&mut self, message: ControllerMessage) {
         match message {
             ControllerMessage::FrameController(message) => {
-                self.frame_controller.call(message);
+                self.frame_controller.call(message, &mut self.model.frame);
             }
             ControllerMessage::ViewportController(message) => {
                 self.viewport_controller.call(message);
@@ -92,9 +92,9 @@ mod controller_tests {
             controller.call(message);
         }
 
-        assert_eq!(controller.model.frame.borrow().shift, 1);
-        assert_eq!(controller.model.frame.borrow().auto_move_x, true);
-        assert_eq!(controller.model.frame.borrow().auto_adjust_y, true);
+        assert_eq!(controller.model.frame.shift, 1);
+        assert_eq!(controller.model.frame.auto_move_x, true);
+        assert_eq!(controller.model.frame.auto_adjust_y, true);
     }
 
     #[test]
