@@ -45,12 +45,12 @@ impl View {
     }
 
     pub fn render(&mut self, model: &model::Model) {
-        let width = model.viewport.borrow().width;
-        let height = model.viewport.borrow().height;
-        let min_x = model.frame.borrow().min_x;
-        let max_x = model.frame.borrow().max_x;
-        let min_y = model.frame.borrow().min_y;
-        let max_y = model.frame.borrow().max_y;
+        let width = model.viewport.width;
+        let height = model.viewport.height;
+        let min_x = model.frame.min_x;
+        let max_x = model.frame.max_x;
+        let min_y = model.frame.min_y;
+        let max_y = model.frame.max_y;
 
         let converter = Converter::new(width, height, min_x, min_y, max_x, max_y);
         let builder = builder::Builder::new(converter);

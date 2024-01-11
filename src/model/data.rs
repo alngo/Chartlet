@@ -30,8 +30,10 @@ pub struct DataList {
 }
 
 impl List<Data> for DataList {
-    fn new() -> DataList {
-        DataList { data: Vec::new() }
+    fn new(data: &[Data]) -> DataList {
+        DataList {
+            data: data.to_vec(),
+        }
     }
 
     fn get(&self, index: usize) -> Option<&Data> {
@@ -57,7 +59,7 @@ mod data_list_tests {
 
     #[test]
     fn test_data_list() {
-        let mut data_list = DataList::new();
+        let mut data_list = DataList::default();
         data_list.push(Data::new(1, 2.0, 3.0, 4.0, 5.0, 6.0));
         data_list.push(Data::new(2, 3.0, 4.0, 5.0, 6.0, 7.0));
         assert_eq!(data_list.len(), 2);

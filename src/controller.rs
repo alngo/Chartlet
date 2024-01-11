@@ -27,9 +27,9 @@ pub struct Controller {
 
 impl Controller {
     pub fn new(model: Model, view: View) -> Controller {
-        let data_controller = DataController::new(model.data_list.clone());
-        let frame_controller = FrameController::new(model.frame.clone());
-        let viewport_controller = ViewportController::new(model.viewport.clone());
+        let data_controller = DataController::default();
+        let frame_controller = FrameController::default();
+        let viewport_controller = ViewportController::default();
         Controller {
             model,
             view,
@@ -42,13 +42,15 @@ impl Controller {
     pub fn call(&mut self, message: ControllerMessage) {
         match message {
             ControllerMessage::FrameController(message) => {
-                self.frame_controller.call(message);
+                self.frame_controller.call(message, &mut self.model.frame);
             }
             ControllerMessage::ViewportController(message) => {
-                self.viewport_controller.call(message);
+                self.viewport_controller
+                    .call(message, &mut self.model.viewport);
             }
             ControllerMessage::DataController(message) => {
-                self.data_controller.call(message);
+                self.data_controller
+                    .call(message, &mut self.model.data_list);
             }
         }
         self.update();
@@ -73,7 +75,7 @@ mod controller_tests {
             0, 1.0, 2.0, 3.0, 4.0, 5.0,
         )));
         controller.call(message);
-        assert_eq!(controller.model.data_list.borrow().len(), 1);
+        assert_eq!(controller.model.data_list.len(), 1);
     }
 
     #[test]
@@ -92,9 +94,9 @@ mod controller_tests {
             controller.call(message);
         }
 
-        assert_eq!(controller.model.frame.borrow().shift, 1);
-        assert_eq!(controller.model.frame.borrow().auto_move_x, true);
-        assert_eq!(controller.model.frame.borrow().auto_adjust_y, true);
+        assert_eq!(controller.model.frame.shift, 1);
+        assert_eq!(controller.model.frame.auto_move_x, true);
+        assert_eq!(controller.model.frame.auto_adjust_y, true);
     }
 
     #[test]
@@ -112,7 +114,7 @@ mod controller_tests {
             controller.call(message);
         }
 
-        assert_eq!(controller.model.viewport.borrow().width, 1);
-        assert_eq!(controller.model.viewport.borrow().height, 2);
+        assert_eq!(controller.model.viewport.width, 1);
+        assert_eq!(controller.model.viewport.height, 2);
     }
 }
