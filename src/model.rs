@@ -13,7 +13,7 @@ use viewport::Viewport;
 #[derive(Default, Clone, Debug)]
 pub struct Model {
     pub frame: Frame,
-    pub viewport: Rc<RefCell<Viewport>>,
+    pub viewport: Viewport,
     pub data_list: Rc<RefCell<DataList>>,
     // IndicatorsList
     // ObjectsList
@@ -24,7 +24,7 @@ impl Model {
     pub fn new() -> Model {
         Model {
             frame: Frame::default(),
-            viewport: Rc::new(RefCell::new(Viewport::default())),
+            viewport: Viewport::default(),
             data_list: Rc::new(RefCell::new(DataList::new())),
         }
     }

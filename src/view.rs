@@ -45,8 +45,8 @@ impl View {
     }
 
     pub fn render(&mut self, model: &model::Model) {
-        let width = model.viewport.borrow().width;
-        let height = model.viewport.borrow().height;
+        let width = model.viewport.width;
+        let height = model.viewport.height;
         let min_x = model.frame.min_x;
         let max_x = model.frame.max_x;
         let min_y = model.frame.min_y;

@@ -29,7 +29,7 @@ impl Controller {
     pub fn new(model: Model, view: View) -> Controller {
         let data_controller = DataController::new(model.data_list.clone());
         let frame_controller = FrameController::default();
-        let viewport_controller = ViewportController::new(model.viewport.clone());
+        let viewport_controller = ViewportController::default();
         Controller {
             model,
             view,
@@ -45,7 +45,8 @@ impl Controller {
                 self.frame_controller.call(message, &mut self.model.frame);
             }
             ControllerMessage::ViewportController(message) => {
-                self.viewport_controller.call(message);
+                self.viewport_controller
+                    .call(message, &mut self.model.viewport);
             }
             ControllerMessage::DataController(message) => {
                 self.data_controller.call(message);
@@ -112,7 +113,7 @@ mod controller_tests {
             controller.call(message);
         }
 
-        assert_eq!(controller.model.viewport.borrow().width, 1);
-        assert_eq!(controller.model.viewport.borrow().height, 2);
+        assert_eq!(controller.model.viewport.width, 1);
+        assert_eq!(controller.model.viewport.height, 2);
     }
 }
