@@ -27,7 +27,7 @@ pub struct Controller {
 
 impl Controller {
     pub fn new(model: Model, view: View) -> Controller {
-        let data_controller = DataController::new(model.data_list.clone());
+        let data_controller = DataController::default();
         let frame_controller = FrameController::default();
         let viewport_controller = ViewportController::default();
         Controller {
@@ -49,7 +49,8 @@ impl Controller {
                     .call(message, &mut self.model.viewport);
             }
             ControllerMessage::DataController(message) => {
-                self.data_controller.call(message);
+                self.data_controller
+                    .call(message, &mut self.model.data_list);
             }
         }
         self.update();
@@ -74,7 +75,7 @@ mod controller_tests {
             0, 1.0, 2.0, 3.0, 4.0, 5.0,
         )));
         controller.call(message);
-        assert_eq!(controller.model.data_list.borrow().len(), 1);
+        assert_eq!(controller.model.data_list.len(), 1);
     }
 
     #[test]

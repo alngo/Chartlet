@@ -1,5 +1,3 @@
-use std::{cell::RefCell, rc::Rc};
-
 use crate::model::{
     data::{Data, DataList},
     list::List,
@@ -10,25 +8,14 @@ pub enum DataControllerMessage {
 }
 
 #[derive(Default)]
-pub(crate) struct DataController {
-    data_list: Rc<RefCell<DataList>>,
-}
+pub(crate) struct DataController;
 
 impl DataController {
-    pub fn new(data_list: Rc<RefCell<DataList>>) -> DataController {
-        DataController { data_list }
-    }
-
-    pub fn call(&mut self, method_name: DataControllerMessage) {
+    pub fn call(&mut self, method_name: DataControllerMessage, data_list: &mut DataList) {
         use self::DataControllerMessage::*;
         match method_name {
-            Push(data) => self.push_data(data),
+            Push(data) => data_list.push(data),
         }
-    }
-
-    fn push_data(&mut self, data: Data) {
-        let mut data_list = self.data_list.borrow_mut();
-        data_list.push(data);
     }
 }
 
@@ -39,11 +26,12 @@ mod data_controller_tests {
 
     #[test]
     fn test_data_controller() {
-        let model = Model::new();
-        let mut data_controller = DataController::new(model.data_list.clone());
-        data_controller.call(DataControllerMessage::Push(Data::new(
-            0, 1.0, 2.0, 3.0, 4.0, 5.0,
-        )));
-        assert_eq!(model.data_list.borrow().len(), 1);
+        let mut model = Model::new();
+        let mut data_controller = DataController::default();
+        data_controller.call(
+            DataControllerMessage::Push(Data::new(0, 1.0, 2.0, 3.0, 4.0, 5.0)),
+            &mut model.data_list,
+        );
+        assert_eq!(model.data_list.len(), 1);
     }
 }
