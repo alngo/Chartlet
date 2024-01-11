@@ -1,4 +1,4 @@
-use super::context;
+use super::{context, Point};
 
 pub mod line;
 
@@ -9,4 +9,8 @@ pub trait Drawable {
 pub trait Composable {
     fn insert(&mut self, component: &impl Drawable);
     fn remove(&mut self, component: &impl Drawable);
+}
+
+pub trait Intersectable {
+    fn intersect(&self, point: Point);
 }
