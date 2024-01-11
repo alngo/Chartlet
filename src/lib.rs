@@ -14,6 +14,10 @@ struct Chartlet {
     root: HtmlElement,
 }
 
+
+
+
+
 #[wasm_bindgen]
 impl Chartlet {
     pub fn new(root: String) -> Chartlet {
@@ -53,32 +57,4 @@ impl Chartlet {
         };
         Ok(())
     }
-}
-
-#[wasm_bindgen]
-pub fn run() -> Result<(), JsValue> {
-    #[cfg(debug_assertions)]
-    console_error_panic_hook::set_once();
-
-    let model = model::Model::new();
-    let view = view::View::new();
-
-    let _controller = {
-        let mut controller = controller::Controller::new(model, view);
-        let messages = vec![
-            controller::ControllerMessage::ViewportController(
-                controller::ViewportControllerMessage::SetWidth(100),
-            ),
-            controller::ControllerMessage::ViewportController(
-                controller::ViewportControllerMessage::SetHeight(100),
-            ),
-        ];
-
-        for message in messages {
-            controller.call(message);
-        }
-        controller
-    };
-
-    Ok(())
 }
