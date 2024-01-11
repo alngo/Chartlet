@@ -16,7 +16,7 @@ impl Line {
 
 impl Drawable for Line {
     fn draw(&self, context: &dyn context::Context) {
-        context.draw_line(self.start, self.end);
+        let _ = context.draw_line(self.start, self.end);
     }
 }
 
