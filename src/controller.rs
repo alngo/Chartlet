@@ -83,17 +83,14 @@ mod controller_tests {
         let model = Model::new();
         let view = View::new();
         let mut controller = Controller::new(model, view);
-
         let messages = vec![
             ControllerMessage::FrameController(FrameControllerMessage::SetShift(1)),
             ControllerMessage::FrameController(FrameControllerMessage::AutoMoveX(true)),
             ControllerMessage::FrameController(FrameControllerMessage::AutoAdjustY(true)),
         ];
-
         for message in messages {
             controller.call(message);
         }
-
         assert_eq!(controller.model.frame.shift, 1);
         assert_eq!(controller.model.frame.auto_move_x, true);
         assert_eq!(controller.model.frame.auto_adjust_y, true);
@@ -104,16 +101,13 @@ mod controller_tests {
         let model = Model::new();
         let view = View::new();
         let mut controller = Controller::new(model, view);
-
         let messages = vec![
             ControllerMessage::ViewportController(ViewportControllerMessage::SetWidth(1)),
             ControllerMessage::ViewportController(ViewportControllerMessage::SetHeight(2)),
         ];
-
         for message in messages {
             controller.call(message);
         }
-
         assert_eq!(controller.model.viewport.width, 1);
         assert_eq!(controller.model.viewport.height, 2);
     }
