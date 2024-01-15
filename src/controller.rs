@@ -10,6 +10,7 @@ pub use viewport::ViewportControllerMessage;
 
 use crate::{model::Model, view::View};
 
+#[derive(Debug)]
 pub enum ControllerMessage {
     DataController(DataControllerMessage),
     FrameController(FrameControllerMessage),

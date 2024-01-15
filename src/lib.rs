@@ -1,34 +1,22 @@
 use wasm_bindgen::prelude::*;
 use web_sys::*;
 
+pub mod bridge;
 pub mod controller;
 pub mod model;
 pub mod view;
+
+pub use bridge::HtmlBridge;
 
 #[cfg(feature = "wee_alloc")]
 #[global_allocator]
 static ALLOC: wee_alloc::WeeAlloc = wee_alloc::WeeAlloc::INIT;
 
 #[wasm_bindgen]
-struct Bridge {
-    root: Element,
-}
-
-impl Bridge {
-    fn new(id: String) -> Bridge {
-        let document = window().unwrap().document().unwrap();
-        let root = document.get_element_by_id(&id).unwrap();
-        Bridge { root }
-    }
-
-    fn render(&self, html: &str) {
-        self.root.set_inner_html(html);
-    }
-}
-
-#[wasm_bindgen]
 struct Chartlet {
-    bridge: Option<Bridge>,
+    // Not very good, should have Option<Bridge>, the interface instead of the implementation
+    // TODO: Option<Interface>
+    bridge: Option<HtmlBridge>,
 }
 
 #[wasm_bindgen]
@@ -37,7 +25,7 @@ impl Chartlet {
         Chartlet { bridge: None }
     }
 
-    pub fn bridge(&mut self, bridge: Bridge) {
+    pub fn connect_to(&mut self, bridge: HtmlBridge) {
         self.bridge = Some(bridge);
     }
 
