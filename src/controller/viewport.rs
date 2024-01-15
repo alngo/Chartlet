@@ -1,5 +1,6 @@
 use crate::model::viewport::Viewport;
 
+#[derive(Debug)]
 pub enum ViewportControllerMessage {
     SetWidth(usize),
     SetHeight(usize),

@@ -3,6 +3,7 @@ use crate::model::{
     list::List,
 };
 
+#[derive(Debug)]
 pub enum DataControllerMessage {
     Push(Data),
 }

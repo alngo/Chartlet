@@ -1,5 +1,6 @@
 use crate::model::frame::Frame;
 
+#[derive(Debug)]
 pub enum FrameControllerMessage {
     AutoAdjustY(bool),
     AutoMoveX(bool),
