@@ -4,7 +4,6 @@ mod context;
 mod converter;
 
 use crate::model;
-use converter::Converter;
 use std::collections::HashMap;
 
 #[derive(Hash, PartialEq, Eq)]
@@ -45,16 +44,11 @@ impl View {
     }
 
     pub fn render(&mut self, model: &model::Model) {
-        let width = model.viewport.width;
-        let height = model.viewport.height;
         let min_x = model.frame.min_x;
         let max_x = model.frame.max_x;
         let min_y = model.frame.min_y;
         let max_y = model.frame.max_y;
-
-        let converter = Converter::new(width, height, min_x, min_y, max_x, max_y);
-        let builder = builder::Builder::new(converter);
-
+        let builder = builder::Builder::default();
         self.layers
             .insert(Layer::Grid, builder.build_grid(min_x, max_x, min_y, max_y));
     }

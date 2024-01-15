@@ -9,8 +9,6 @@ use super::view::Drawables;
 pub trait Bridge {
     fn call(&mut self, message: String);
     fn update(&mut self, layers: &HashMap<Layer, Drawables>);
-    fn clear(&mut self);
-    fn render(&mut self, layers: &HashMap<Layer, Drawables>);
 }
 
 #[wasm_bindgen]
@@ -25,18 +23,6 @@ impl HtmlBridge {
         let root = document.get_element_by_id(&id).unwrap();
         HtmlBridge { root }
     }
-}
-
-impl Bridge for HtmlBridge {
-    // message should be mapped to ControllerMessage
-    // Serialize, Deserialize?
-    fn call(&mut self, _message: String) {
-        todo!()
-    }
-
-    fn update(&mut self, _layers: &HashMap<Layer, Drawables>) {
-        todo!()
-    }
 
     fn clear(&mut self) {
         let first_child = self.root.first_child();
@@ -47,5 +33,18 @@ impl Bridge for HtmlBridge {
 
     fn render(&mut self, _layers: &HashMap<Layer, Drawables>) {
         todo!()
+    }
+}
+
+impl Bridge for HtmlBridge {
+    // message should be mapped to ControllerMessage
+    // Serialize, Deserialize?
+    fn call(&mut self, _message: String) {
+        todo!()
+    }
+
+    fn update(&mut self, layers: &HashMap<Layer, Drawables>) {
+        self.clear();
+        self.render(layers);
     }
 }
